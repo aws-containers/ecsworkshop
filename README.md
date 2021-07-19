@@ -1,5 +1,7 @@
 # ecsworkshop
 
+[![Build Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiN1hKcXpqSUFDaVpjdGpxSDJFVngwMXZzaDFIaFZESWpIYkR6ZWlGQ1lCR3NRTGo2emVWZThpaWoyenB4WDJEZmZFaW15RHlzUmg4MmFtTXpuOTB1UVY4PSIsIml2UGFyYW1ldGVyU3BlYyI6IjIrcXBxMDJBSlVSRnRPWU4iLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiN1hKcXpqSUFDaVpjdGpxSDJFVngwMXZzaDFIaFZESWpIYkR6ZWlGQ1lCR3NRTGo2emVWZThpaWoyenB4WDJEZmZFaW15RHlzUmg4MmFtTXpuOTB1UVY4PSIsIml2UGFyYW1ldGVyU3BlYyI6IjIrcXBxMDJBSlVSRnRPWU4iLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main)
+
 ### Setup:
 
 #### Install Hugo:
