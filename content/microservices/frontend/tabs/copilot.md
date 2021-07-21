@@ -251,7 +251,7 @@ git config --global credential.helper '!aws codecommit credential-helper $@'
 git config --global credential.UseHttpPath true
 
 # Add the new repo as a remote
-git remote add cc $remote_https_url
+git remote add cc $repo_https_url
 
 # Push the changes
 git push cc HEAD
