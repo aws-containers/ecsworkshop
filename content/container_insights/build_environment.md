@@ -16,7 +16,7 @@ aws iam get-role --role-name "AWSServiceRoleForECS" || aws iam create-service-li
 
 #### Application setup
 
-In this section we will setup Container insights. In order to get started, we need to deploy the environment as well as a frontend service in ECS. 
+In this section we will setup Container insights. In order to get started, we need to deploy the environment as well as a frontend service in ECS.
 If you deployed the microservices in the chapter prior, you can skip this step and move on to the next page.
 
 #### Clone the repos
@@ -26,9 +26,9 @@ Clone the service repos:
 ```bash
 cd ~/environment
 git clone https://github.com/aws-containers/ecsdemo-platform
-git clone https://github.com/brentley/ecsdemo-frontend
-git clone https://github.com/brentley/ecsdemo-nodejs
-git clone https://github.com/brentley/ecsdemo-crystal
+git clone https://github.com/aws-containers/ecsdemo-frontend
+git clone https://github.com/aws-containers/ecsdemo-nodejs
+git clone https://github.com/aws-containers/ecsdemo-crystal
 ```
 
 #### Build the platform
