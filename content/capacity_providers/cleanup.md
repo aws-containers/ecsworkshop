@@ -11,7 +11,7 @@ cd ~/environment/ecsdemo-capacityproviders/ec2
 cdk destroy -f
 cd ~/environment/ecsdemo-capacityproviders/fargate
 cdk destroy -f
-cd ~/environment/container-demo/cdk
+cd ~/environment/ecsdemo-platform/cdk
 cdk destroy -f
 ```
 

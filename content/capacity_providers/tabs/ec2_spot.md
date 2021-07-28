@@ -19,7 +19,7 @@ Instance type flexibility best practice is very simple to achieve with EC2 Auto 
 Navigate back to the repo where we create and manage the platform.
 
 ```bash
-cd ~/environment/container-demo/cdk
+cd ~/environment/ecsdemo-platform/cdk
 ```
 
 In the app.py, uncomment the code under the section of code that says `###### EC2 SPOT CAPACITY PROVIDER SECTION ######`. It should look like this:

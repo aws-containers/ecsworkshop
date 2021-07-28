@@ -7,7 +7,7 @@ hidden: true
  
 #### Navigate to the platform repo
 ```bash
-cd ~/environment/container-demo/cdk
+cd ~/environment/ecsdemo-platform/cdk
 ```
 #### Confirm that the cdk can synthesize the assembly CloudFormation templates 
 ```bash

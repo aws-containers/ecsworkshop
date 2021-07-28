@@ -3,16 +3,17 @@ title: "Acceptance and Production"
 disableToc: true
 hidden: true
 ---
- 
+
 ## Deploy the Nodejs backend service
 
-Navigate to the nodejs service repo.
+Navigate to the nodejs service repo and populate the git hash file which is required for our microservice.
 
 ```bash
 cd ~/environment/ecsdemo-nodejs
+git rev-parse --short=7 HEAD > code_hash.txt
 ```
 
-In the previous section, we deployed our application, test environment, and the frontend service. 
+In the previous section, we deployed our application, test environment, and the frontend service.
 
 To start, we need to create our nodejs service in the ecsworkshop application.
 
@@ -30,7 +31,7 @@ We will be prompted with a series of questions related to the application, envir
 - What do you want to name this Backend Service: ecsdemo-nodejs
 - Dockerfile: ./Dockerfile
 
-After you answer the questions, it will begin the process of creating some baseline resources for your service. 
+After you answer the questions, it will begin the process of creating some baseline resources for your service.
 This also includes the manifest file which defines the desired state of this service. For more information on the manifest file, see the [copilot-cli documentation](https://github.com/aws/copilot-cli/wiki/Backend-Service-Manifest).
 
 Next, you will be prompted to deploy a test environment. An environment encompasses all of the resources that are required to support running your containers in ECS.
@@ -42,59 +43,8 @@ Below is an example of what the cli interaction will look like:
 
 ![deployment](/images/copilot-init-nodejs.gif)
 
-The nodejs service is now deployed! Navigate back to the frontend load balancer url, and you should now see the nodejs service. You may notice that it is not working as we fully expect with the diagram. 
-This is because the service needs an environment variable as well as an IAM role addon to fully function as expected. Run the commands below to add an environment variable, and create the IAM role in the addons path.
-
-```bash
-mkdir -p copilot/ecsdemo-nodejs/addons
-cat << EOF > copilot/ecsdemo-nodejs/addons/task-role.yaml
-# You can use any of these parameters to create conditions or mappings in your template.
-Parameters:
-  App:
-    Type: String
-    Description: Your application's name.
-  Env:
-    Type: String
-    Description: The environment name your service, job, or workflow is being deployed to.
-  Name:
-    Type: String
-    Description: The name of the service, job, or workflow being deployed.
-
-Resources:
-  SubnetsAccessPolicy:
-    Type: AWS::IAM::ManagedPolicy
-    Properties:
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Sid: EC2Actions
-            Effect: Allow
-            Action:
-              - ec2:DescribeSubnets
-            Resource: "*"
-
-Outputs:
-  # You also need to output the IAM ManagedPolicy so that Copilot can inject it to your ECS task role.
-  SubnetsAccessPolicyArn:
-    Description: "The ARN of the Policy to attach to the task role."
-    Value: !Ref SubnetsAccessPolicy
-EOF
-
-cat << EOF >> copilot/ecsdemo-nodejs/manifest.yml
-
-variables:
-  AWS_DEFAULT_REGION: $(echo $AWS_REGION)
-EOF
-
-git rev-parse --short=7 HEAD > code_hash.txt
-
-```
-
-Now, let's redeploy the service:
-
-```bash
-copilot svc deploy
-```
+That's it!
+When the deployment is complete, navigate back to the frontend URL and you should now see the backend Nodejs service in the image.
 
 ## Interacting with the application
 
@@ -185,6 +135,7 @@ Note that if you are in the same directory of the service you want to review log
 ```bash
 copilot svc logs
 ```
+
 Last thing to bring up is that you aren't limited to live tailing logs, type `copilot svc logs --help` to see the different ways to review logs from the command line.
 
 ## Next steps

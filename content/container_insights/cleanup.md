@@ -49,7 +49,7 @@ cd ~/environment/ecsdemo-nodejs/cdk
 cdk destroy -f
 cd ~/environment/ecsdemo-crystal/cdk
 cdk destroy -f
-cd ~/environment/container-demo/cdk
+cd ~/environment/ecsdemo-platform/cdk
 cdk destroy -f
 
 python -c "import boto3

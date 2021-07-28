@@ -9,7 +9,7 @@ hidden: true
 Navigate back to the repo where we create and manage the platform.
 
 ```bash
-cd ~/environment/container-demo/cdk
+cd ~/environment/ecsdemo-platform/cdk
 ```
 
 In the app.py, uncomment the code under the section of code that says `###### CAPACITY PROVIDERS SECTION #####`. It should look like this:

@@ -18,7 +18,7 @@ Clone the service repos:
 
 ```bash
 cd ~/environment
-git clone https://github.com/brentley/container-demo
+git clone https://github.com/aws-containers/ecsdemo-platform
 git clone https://github.com/adamjkeller/ecsdemo-capacityproviders
 ```
 
@@ -27,7 +27,7 @@ git clone https://github.com/adamjkeller/ecsdemo-capacityproviders
 First, we need to build the environment for our frontend service to run. For more information on what we're building, you can review the code here: [Platform](../../microservices/platform/build_environment).
 
 ```bash
-cd ~/environment/container-demo/cdk
+cd ~/environment/ecsdemo-platform/cdk
 cdk context --clear && cdk deploy --require-approval never
 ```
 
