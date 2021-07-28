@@ -3,26 +3,27 @@ title: "Acceptance and Production"
 disableToc: true
 hidden: true
 ---
- 
+
 ## Validate deployment configuration
 
 ```bash
 cd ~/environment/ecsdemo-frontend/cdk
 ```
 
-#### Confirm that the cdk can synthesize the assembly CloudFormation templates 
+#### Confirm that the cdk can synthesize the assembly CloudFormation templates
 
 ```bash
 cdk synth
 ```
 
-#### Review what the cdk is proposing to build and/or change in the environment 
+#### Review what the cdk is proposing to build and/or change in the environment
 
 ```bash
 cdk diff
 ```
 
 ## Deploy the frontend web service
+
 ```bash
 cdk deploy --require-approval never
 ```
@@ -41,7 +42,7 @@ Because we built the platform in its own stack, there are certain environmental 
 
 ```python
 class BasePlatform(core.Construct):
-    
+
     def __init__(self, scope: core.Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
@@ -50,7 +51,7 @@ class BasePlatform(core.Construct):
             self, "ECSWorkshopVPC",
             vpc_name='ecsworkshop-base/BaseVPC'
         )
-        
+
         # Importing the service discovery namespace from the base platform stack
         self.sd_namespace = aws_servicediscovery.PrivateDnsNamespace.from_private_dns_namespace_attributes(
             self, "SDNamespace",
@@ -58,7 +59,7 @@ class BasePlatform(core.Construct):
             namespace_arn=core.Fn.import_value('NSARN'),
             namespace_id=core.Fn.import_value('NSID')
         )
-        
+
         # Importing the ECS cluster from the base platform stack
         self.ecs_cluster = aws_ecs.Cluster.from_cluster_attributes(
             self, "ECSCluster",
@@ -81,7 +82,7 @@ For the frontend service, there are quite a few components that have to be built
 
 ```python
 class FrontendService(core.Stack):
-    
+
     def __init__(self, scope: core.Stack, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
@@ -140,16 +141,17 @@ awslogs get -G -S --timestamp --start 1m --watch $log_group
 {{%expand "Expand here to see the solution" %}}
 
 - First, we will navigate to ECS in the console and drill down into our service to get detailed information. As you can see, there is a lot of information that we can gather around the service itself, such as Load Balancer details, number of tasks running, as well as logs. Click the logs tab to review the logs for the running service.
-![Console2ServiceLogs](/images/ecs-console-service-logs.gif)
+  ![Console2ServiceLogs](/images/ecs-console-service-logs.gif)
 
 - Next, we can review our service logs in near real time. You can go back in time as far as one week, or drill down to the past 30 seconds. In the example below, we select 30 seconds.
-![ConsoleServiceLogs](/images/ecs-console-logs.gif)
+  ![ConsoleServiceLogs](/images/ecs-console-logs.gif)
 
 {{% /expand %}}
 
 ## Scale the service
 
 #### Manually scaling
+
 {{%expand "Expand here to see the solution" %}}
 
 - To manually scale the service up, we simply will modify the code in `app.py` and change the desired count from 1 to 3
@@ -191,13 +193,14 @@ cdk deploy
 {{% /expand %}}
 
 #### Autoscaling
+
 {{%expand "Expand here to see the solution" %}}
 
 #### Why autoscale?
 
-- Well, to put it simply - it's either a human scales the service, or the orchestrator. 
-    - If we choose to do it manually, this means that as load increases, we need to stop what we are doing to scale the service to meet the load (and not to mention that we have to eventually scale back down once the load clears). This can be tedious and painful, hence why autoscaling exists.
-    - If we let the orchestrator handle the scaling in and out for the service, we can focus on continuous improvement, and less on operational heavy lifting. In order to get autoscaling setup, one first needs to know what metric to use as the decision to autoscale. Some example metrics for scaling are CPU utilization, memory utilization, and queue depth.
+- Well, to put it simply - it's either a human scales the service, or the orchestrator.
+  - If we choose to do it manually, this means that as load increases, we need to stop what we are doing to scale the service to meet the load (and not to mention that we have to eventually scale back down once the load clears). This can be tedious and painful, hence why autoscaling exists.
+  - If we let the orchestrator handle the scaling in and out for the service, we can focus on continuous improvement, and less on operational heavy lifting. In order to get autoscaling setup, one first needs to know what metric to use as the decision to autoscale. Some example metrics for scaling are CPU utilization, memory utilization, and queue depth.
 
 #### Setup Autoscaling in the code
 
@@ -267,7 +270,7 @@ cdk deploy --require-approval never
 
 #### Load test
 
-- Next, let's generate some load on the frontend. 
+- Next, let's generate some load on the frontend.
 
 ```bash
 alb_url=$(aws cloudformation describe-stacks --stack-name ecsworkshop-frontend --query "Stacks" --output json | jq -r '.[].Outputs[] | select(.OutputKey |contains("LoadBalancer")) | .OutputValue')
@@ -276,27 +279,21 @@ siege -c 20 -i $alb_url&
 
 - While siege is running in the background, either navigate to the console or monitor the autoscaling from the command line.
 
-{{%expand "Command Line" %}}
+##### Command Line
 
 - Compare the tasks running vs tasks desired. As the load increases on the frontend service, we should see these counts eventually increase up to 10. This is autoscaling happening in real time. Please note that this step will take a few minutes. Feel free to run this in one terminal, and move on to the next steps in another terminal.
 
 ```bash
-while true; do sleep 3; aws ecs describe-services --cluster container-demo --services ecsdemo-frontend | jq '.services[] | "Tasks Desired: \(.desiredCount) vs Tasks Running: \(.runningCount)"'; done 
+while true; do sleep 3; aws ecs describe-services --cluster container-demo --services ecsdemo-frontend | jq '.services[] | "Tasks Desired: \(.desiredCount) vs Tasks Running: \(.runningCount)"'; done
 ```
 
 - Now that we've seen the service autoscale out, let's stop the running while loop. Simply press `control + c` to cancel.
 
 - Time to cancel the load test. By prepending our command with `&`, we instructed it to run in the background. Bring it back to the foreground, and stop it. To stop it, type the following:
 
-    - `fg`
-    - `control + c`
+  - `fg`
+  - `control + c`
 
 - NOTE: To ensure application availability, the service scales out proportionally to the metric as fast as it can, but scales in more gradually. For more information, see the [documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-autoscaling-targettracking.html)
-
-{{% /expand %}}
-
-{{%expand "Console" %}}
-- Coming soon!
-{{% /expand %}}
 
 {{% /expand %}}
