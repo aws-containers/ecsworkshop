@@ -8,7 +8,7 @@ hidden: true
 
 ```
 # Install prerequisite packages
-sudo yum -y install jq nodejs python36
+sudo yum -y install jq nodejs python36 siege
 
 # Install ecs cli for local testing
 sudo curl -so /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
