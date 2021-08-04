@@ -42,8 +42,8 @@ Let's update the manifest file with the environment variables.
 ```bash
 cat << EOF >> copilot/ecsdemo-frontend/manifest.yml
 variables:
-  CRYSTAL_URL: "http://ecsdemo-crystal.ecsworkshop.local:3000/crystal"
-  NODEJS_URL: "http://ecsdemo-nodejs.ecsworkshop.local:3000"
+  CRYSTAL_URL: "http://ecsdemo-crystal.test.ecsworkshop.local:3000/crystal"
+  NODEJS_URL: "http://ecsdemo-nodejs.test.ecsworkshop.local:3000"
 EOF
 ```
 
