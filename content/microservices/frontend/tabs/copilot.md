@@ -63,11 +63,19 @@ copilot env init --name test --profile default --default-config
 
 This part will take a few minutes because of all of the resources that are being created. This is not an action you run every time you deploy your service, it's just the one time to get your environment up and running.
 
+Next, we will deploy our service!
+
+```bash
+copilot svc deploy
+```
+
+At this point, copilot will build our Dockerfile and deploy the necessary resources for our service to run.
+
 Below is an example of what the cli interaction will look like:
 
 ![deployment](/images/copilot-frontend.gif)
 
-Ok, that's it! With one command and answering a few questions, we have our frontend service deployed to an environment!
+Ok, that's it! By simply answering a few questions, we have our frontend service deployed to an environment!
 
 Grab the load balancer url and paste it into your browser.
 
