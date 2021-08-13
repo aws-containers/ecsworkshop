@@ -22,6 +22,7 @@ source ~/.bashrc
 curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm" -o "session-manager-plugin.rpm"
 sudo yum install -y session-manager-plugin.rpm
 ```
+
 jq is a tool that can be used to extract and transform data held in JSON files.
 
 The gettext package includes the envsubst utility, which can be used to substitute the values of environment variables into an input stream.
@@ -31,12 +32,14 @@ We will use these tools, along with the Linux utiltity sed, to insert or replace
 Note: If you use another Cloud9 OS then Amazon Linux 2 please follow the [instruction](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-linux) to install AWS session manager plugin.
 
 ## Download workshop resources
+
 ```
 cd ~/environment
-git clone https://github.com/brentley/ecsworkshop.git
+git clone https://github.com/aws-containers/ecsworkshop.git
 ```
 
 ## Create the lab environment
+
 ```
 # create CloudWatch log group
 echo "export CW_LOG_GROUP=/aws/ecs/ecs-networking-demo" >> ~/.bashrc
