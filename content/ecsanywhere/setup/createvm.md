@@ -112,14 +112,11 @@ end
 
     > Note: Replace `ACTIVATION_ID` and `ACTIVATION_CODE` with the actual values available inside `ssm-activation.json` file of the host machine
 
-2. Download ECS-anywhere install shell script, update permissions and check the integrity of the file before proceeding to next step
+2. Download ECS-anywhere install shell script and update permissions before proceeding to next step
 
     ```bash
     # Download the ecs-anywhere install Script 
-    curl -o "ecs-anywhere-install.sh" "https://amazon-ecs-agent-packages-preview.s3.us-east-1.amazonaws.com/ecs-anywhere-install.sh" && sudo chmod +x ecs-anywhere-install.sh
-
-    # (Optional) Check integrity of the shell script
-    curl -o "ecs-anywhere-install.sh.sha256" "https://amazon-ecs-agent-packages-preview.s3.us-east-1.amazonaws.com/ecs-anywhere-install.sh.sha256" && sha256sum -c ecs-anywhere-install.sh.sha256
+    curl -o "ecs-anywhere-install.sh" "https://amazon-ecs-agent.s3.amazonaws.com/ecs-anywhere-install-latest.sh" && sudo chmod +x ecs-anywhere-install.sh
     ```
 
 3. Run the following command to install `ECS agent` and `SSM agent` which will allow ECS control plane to manage and run workloads on this virtual machine
