@@ -213,4 +213,6 @@ The following resources have been created:
 - App Mesh Virtual Gateway: A virtual gateway allows resources that are outside of your mesh to communicate to resources that are inside of your mesh. The virtual gateway represents an Envoy proxy running in an Amazon ECS service, in a Kubernetes service, or on an Amazon EC2 instance. Unlike a virtual node, which represents Envoy running with an application, a virtual gateway represents Envoy deployed by itself.
     - External resources must be able to resolve a DNS name to an IP address assigned to the service or instance that runs Envoy, in this case we will use CloudMap. Envoy can then access all of the App Mesh configuration for resources that are inside of the mesh. The configuration for handling the incoming requests at the Virtual Gateway are specified using Gateway Routes.
 
-Here is a diagram of the architecture with the Virtual gateway in place.
+This is an abstract architecture of what we have deployed so far:
+
+![infra-nodejs](../images/ecs-app-mesh-diagram-Infra-Mesh.png)

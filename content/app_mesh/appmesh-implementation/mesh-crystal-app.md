@@ -8,6 +8,9 @@ At this point, you should have the base platform (VPC, Natgateways, SGs,), the E
 
 In this chapter, our goal is to edit your ECS Crystal App in order to have the Envoy containers running and intercepting the network traffic from your ECS tasks.
 
+**Infrastructure setup:**
+![infra-crystal](../images/ecs-app-mesh-diagram-Infra-Crystal.png)
+
 ### Preparing CDK Code To Deploy App Mesh Resources And ECS Configurations
 
 To enable the crystal app configuration, please uncomment `lines 65 to 74` on file `~/environment/ecsdemo-crystal/cdk/app.py` or run this command in the terminarl:

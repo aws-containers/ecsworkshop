@@ -8,6 +8,9 @@ At this point, you should have the base platform (VPC, Natgateways, SGs,), the E
 
 In this chapter, our goal is to edit your ECS NodeJs App in order to have the Envoy containers running and intercepting the network traffic from your ECS tasks.
 
+**Infrastructure setup:**
+![infra-nodejs](../images/ecs-app-mesh-diagram-Infra-NodeJs.png)
+
 ### Preparing CDK Code To Deploy App Mesh Resources And ECS Configurations
 
 To enable the nodejs app configuration, please uncomment `lines 65 to 74` on file `~/environment/ecsdemo-nodejs/cdk/app.py` or run this command in the terminal:
