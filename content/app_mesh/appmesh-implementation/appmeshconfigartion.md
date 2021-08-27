@@ -25,12 +25,12 @@ Now every time you launch an Envoy enabled microservice, the Envoy proxy will co
 
 Let’s start by creating the service mesh. A service mesh is a logical boundary for network traffic between the services that resides within it. To enable the app mesh, we will configure the ecsdemo-platform app as follow:
 
-Open the terminal and execute:
+Open the terminal and execute, so we can open the document that we need to configure:
 ```bash
 c9 ~/environment/ecsdemo-platform/cdk/app.py
 ```
 
-Go to line #213 and uncomment `# self.appmesh()` or execute the following command in the terminal:
+Uncomment the function `# self.appmesh()` in the document or execute the following command in the terminal:
 ```bash
 sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-platform/cdk/app.py
 ```
@@ -57,10 +57,10 @@ cdk deploy --require-approval never
 ```
 
 {{% notice info %}}
-The information we are going to review moving forward is focused solely on the App Mesh implementations. For explanations regarding ECS CDK implementation, please, check out the workshop "[Deploying Microservices to ECS]({{< ref "microservices/" >}})"
+The information we are going to review moving forward is focused solely in the App Mesh integration. For explanations regarding ECS CDK implementation, please, check out the workshop "[Deploying Microservices to ECS]({{< ref "microservices/" >}})"
 {{% /notice %}}
 
-Let’s take a look at what’s being built from the App mesh perspective. You may notice that everything defined in the stack is 100% written as python code.
+Let’s take a look at what’s being built from the App mesh perspective. You may notice that everything defined in the stack is 100% written in python code.
     
 
 ```python
@@ -213,4 +213,6 @@ The following resources have been created:
 - App Mesh Virtual Gateway: A virtual gateway allows resources that are outside of your mesh to communicate to resources that are inside of your mesh. The virtual gateway represents an Envoy proxy running in an Amazon ECS service, in a Kubernetes service, or on an Amazon EC2 instance. Unlike a virtual node, which represents Envoy running with an application, a virtual gateway represents Envoy deployed by itself.
     - External resources must be able to resolve a DNS name to an IP address assigned to the service or instance that runs Envoy, in this case we will use CloudMap. Envoy can then access all of the App Mesh configuration for resources that are inside of the mesh. The configuration for handling the incoming requests at the Virtual Gateway are specified using Gateway Routes.
 
-Here is a diagram of the architecture with the Virtual gateway in place.
+This is an abstract architecture of what we have deployed so far:
+
+![infra-nodejs](../images/ecs-app-mesh-diagram-Infra-Mesh.png)

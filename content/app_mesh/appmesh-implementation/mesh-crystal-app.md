@@ -8,9 +8,12 @@ At this point, you should have the base platform (VPC, Natgateways, SGs,), the E
 
 In this chapter, our goal is to edit your ECS Crystal App in order to have the Envoy containers running and intercepting the network traffic from your ECS tasks.
 
+**Infrastructure setup:**
+![infra-crystal](../images/ecs-app-mesh-diagram-Infra-Crystal.png)
+
 ### Preparing CDK Code To Deploy App Mesh Resources And ECS Configurations
 
-To enable the crystal app configuration, please uncomment `lines 65 to 74` on file `~/environment/ecsdemo-crystal/cdk/app.py` or run this command in the terminarl:
+To enable the crystal app configuration, please uncomment the code between the tags `#appmesh-proxy-uncomment` in the file `~/environment/ecsdemo-crystal/cdk/app.py` or run this command in the terminarl:
 ```bash
 lines=($(grep -Fn '#appmesh-proxy-uncomment' ~/environment/ecsdemo-crystal/cdk/app.py | cut -f1 -d:))
 unstart=$((${lines[0]} + 1))
@@ -44,18 +47,18 @@ self.fargate_task_def = aws_ecs.TaskDefinition(
 The **proxy configuration** will enable the app mesh integration with ECS. for more information regarding the parameter please check out the [official documentation](https://docs.aws.amazon.com/app-mesh/latest/userguide/envoy-config.html) and [CDK Parameters](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_ecs/AppMeshProxyConfiguration.html).
 
 
-Uncomment `# self.appmesh()` in the line `140`, or execute the following command in the terminal:
+Uncomment the function `# self.appmesh()` in the file `~/environment/ecsdemo-crystal/cdk/app.py` or execute the following command in the terminal:
 ```bash
 sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-crystal/cdk/app.py
 ```
 
 The `appmesh()` function will add all the required resources into the CF to configure the crystal app to work with App Mesh. In a moment we will review the resources that were created by this function.
 
-To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations. To do so, uncomment line `86` and comment line `85` or use this command:
+To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations.  To do so, uncomment line where we indicate the container images as follow or use this command:
 ```bash
-#commenting previous line
+#commenting previous container image repo
 sed -i -e '/adam9098/s/^#*/#/' ~/environment/ecsdemo-crystal/cdk/app.py
-#uncommenting new line
+#uncommenting ECR image repo
 sed -i -e '/amazonaws.com\/ecsdemo-crystal/s/# //' ~/environment/ecsdemo-crystal/cdk/app.py
 ```
 

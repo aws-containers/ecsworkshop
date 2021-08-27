@@ -9,4 +9,5 @@ weight: 5
 The following topics are covered part of this chapter:
 
 * [Create an AWS Account and Workspace]({{< ref "start_the_workshop/" >}})
-* Install and Configure Tools
+* Pre-requistes software
+* Pre-requistes Config

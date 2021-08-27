@@ -6,9 +6,10 @@ weight = 4
 
 At this point, you should have Crystal and NodeJs backends services running in ECS and their respective App Mesh configurations.
 
-In this chapter, our goal is to edit your ECS Frontend App in order to fully enable request from the exterior of our Mesh to the ECS containers. As depicted in the below picture:
+In this chapter, our goal is to edit your ECS Frontend App in order to fully enable request from the exterior of our Mesh to the ECS containers. As depicted in the pictures below:
 
-![app-running](../images/final-app-working.png)
+**Infrastructure setup:**
+![infra-setup](../images/ecs-app-mesh-diagram-Infra-setup.png)
 
 
 ### Preparing CDK Code To Deploy App Mesh Resources And ECS Configurations
@@ -16,11 +17,11 @@ In this chapter, our goal is to edit your ECS Frontend App in order to fully ena
 The Frontend CDK code will change a bit more than previous Crystal and Nodejs files, since we need to utilize previous App Mesh configurations to reference Crystal and NodeJs Virtual Services and Virtual Nodes. 
 
 
-First, we will comment line `355` and uncomment line `358` file `~/environment/ecsdemo-frontend/cdk/app.py` or run this command in the terminal:
+First, we will comment our new class `FrontendServiceMesh` and comment the previous class `FrontendService` in the file `~/environment/ecsdemo-frontend/cdk/app.py` or run this command in the terminal:
 ```
-#Commenting line 355
+#Commenting previous class
 sed -i -e '/FrontendService(app, stack_name, env=_env)/s/^#*/#/' ~/environment/ecsdemo-frontend/cdk/app.py 
-#Uncommenting line 258
+#Uncommenting new class
 sed -i -e "/FrontendServiceMesh(app, stack_name, env=_env)/s/# //" ~/environment/ecsdemo-frontend/cdk/app.py 
 ```
 
@@ -77,6 +78,8 @@ self.fargate_task_def = aws_ecs.TaskDefinition(
 )
 ```
 
+![Frontend-Task](../images/frontend-task-def.png)
+
 After that we configured the App Mesh resources, first the Virtual Node, where we reference Crytal and Nodejs virtual services as **_backends_** of Frontend Virtual node:
 
 ```python
@@ -94,6 +97,9 @@ self.mesh_frontend_vn = aws_appmesh.VirtualNode(
     
 )
 ```
+![Frontend-VN-1](../images/vn-frontend-simple.png)
+--
+![Frontend-VN-Detail](../images/vn-frontend-detail.png)
 
 Then, we configured the app mesh envoy sidecar `self.envoy_container = self.fargate_task_def.add_container`. Then we created the Virtual Router for the Frontend. A virtual router handle traffic for one or more virtual services within your mesh. After you create a virtual router, you can create and associate routes for your virtual router that direct incoming requests to different virtual nodes. This Virtual router will be used when working with BG/Canary deployments, in a later lecture.
 
@@ -116,6 +122,9 @@ meshVR.add_route(
 )
 ```
 
+![Frontend-VR-Detail](../images/vr-frontend-detail.png)
+
+
 Once we have configured the virtual router, we proceeded on creating the virtual service, where we used the virtual router as Service provider instead of the Virtual Node as we did in Crystal Virtual Service.
 
 ```python
@@ -125,6 +134,8 @@ self.mesh_frontend_vs = aws_appmesh.VirtualService(self,"mesh-frontend-vs",
     virtual_service_name="{}.{}".format(self.fargate_service.cloud_map_service.service_name,self.fargate_service.cloud_map_service.namespace.namespace_name)
 )
 ```
+
+![Frontend-VS-Detail](../images/vs-frontend-router.png)
 
 And lastly, we configure the Virtual Gateway Router. A gateway route is attached to a virtual gateway and routes traffic to an existing virtual service. If a route matches a request, it can distribute traffic to a target virtual service. Basically, this a key peace when working with Virtual Gateways, so we can redirect the request to the right services.
 
@@ -138,6 +149,7 @@ self.mesh_gt_router = self.mesh_vgw.add_gateway_route(
     )
 )
 ```
+![Frontend-VGR-Detail](../images/vgr-frontend-detail.png)
 
 ### Deploying Configurations
 
@@ -167,4 +179,9 @@ Now, to check the application running, you can get the NLB public endpoint from 
 echo "http://$(aws cloudformation describe-stacks --stack-name ecsworkshop-base --query "Stacks[0].Outputs[?OutputKey=='MeshGwNlbDns'].OutputValue" --output text)"
 ```
 
-The final architecture will be:
+Final abstract model of the App architecture after adding the mesh and the constructs to enable App mesh integration
+![final-abstract-mesh-integration](../images/ecs-app-mesh-diagram-Abstract.png)
+
+
+**Working App:**
+![app-running](../images/final-app-working.png)
