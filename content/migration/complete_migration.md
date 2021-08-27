@@ -319,9 +319,9 @@ Now let's see if we can talk to our container via service discovery (which was c
 
 ```bash
 # Curl the health endpoint
-curl http://userapi.migration-demo.local:8080/health
+curl http://userapi.test.migration-demo.local:8080/health
 # Curl the all_users endpoint
-curl http://userapi.migration-demo.local:8080/all_users
+curl http://userapi.test.migration-demo.local:8080/all_users
 ```
 
 Success! We are now succesfully running our code as a container running on Amazon ECS.
