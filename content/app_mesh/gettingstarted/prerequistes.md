@@ -11,7 +11,7 @@ ECS Service Roles
 aws iam get-role --role-name "AWSServiceRoleForECS" || aws iam create-service-linked-role --aws-service-name "ecs.amazonaws.com"
 ```
 
-We will create our own repositories in ECR, so we can avoid  Docker Hub request limits
+We will create our own repositories in ECR, so we can avoid  Docker Hub requests limits
 
 ```bash
 
@@ -39,7 +39,7 @@ docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/ecsdemo-no
 
 ```
 
-Let's clone the application repos so we can deploy our environments to the AWS
+Let's clone the application repos so we can the apps to the AWS
 
 ```bash
 # First we need to clone our repositories locally

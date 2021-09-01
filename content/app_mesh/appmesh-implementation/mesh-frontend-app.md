@@ -25,7 +25,36 @@ sed -i -e '/FrontendService(app, stack_name, env=_env)/s/^#*/#/' ~/environment/e
 sed -i -e "/FrontendServiceMesh(app, stack_name, env=_env)/s/# //" ~/environment/ecsdemo-frontend/cdk/app.py 
 ```
 
-We created a different Class called "FrontendServiceMesh" where we encapsulated all the logic to create the ECS service, and the App Mesh resources for the Frontend app to be able to communicate to the Crystal and NodeJs backends and at the same time be able to be reached by the App Mesh Virtual Gateway.  
+### Deploying Configurations
+
+Install any CDK python prerequisites (libraries) needed by the ecsdemo-frontend application 
+```bash
+pip install --upgrade -r ~/environment/ecsdemo-frontend/cdk/requirements.txt 
+```
+
+Confirm that the CDK can synthesize the assembly CloudFormation templates
+```bash
+cd ~/environment/ecsdemo-frontend/cdk
+cdk synth
+```
+
+View proposed changes to the environment
+```bash
+cdk diff
+```
+
+Deploy the changes to the environment:
+```bash
+cdk deploy --require-approval never
+```
+
+Now, to check the application running, you can get the NLB public endpoint from the base platform output or execute the following command:
+```bash
+echo "http://$(aws cloudformation describe-stacks --stack-name ecsworkshop-base --query "Stacks[0].Outputs[?OutputKey=='MeshGwNlbDns'].OutputValue" --output text)"
+```
+
+#### Let's explain the different peaces of the deployment
+For this particular service we created a different Class called "FrontendServiceMesh", where we encapsulated all the logic to create the ECS service and the App Mesh resources for the Frontend app, so we can be able to communicate to the Crystal and NodeJs backends and at the same time be able to be reached by the App Mesh Virtual Gateway.  
 
 The first thing we needed to do is to pull Crystal and NodeJs mesh configurations so we can use them when configuring Frontend Virtual Node and the Virtual gateway router. That section is:
 
@@ -80,7 +109,7 @@ self.fargate_task_def = aws_ecs.TaskDefinition(
 
 ![Frontend-Task](../images/frontend-task-def.png)
 
-After that we configured the App Mesh resources, first the Virtual Node, where we reference Crytal and Nodejs virtual services as **_backends_** of Frontend Virtual node:
+After that we configured the App Mesh resources. First the Virtual Node, where we reference Crytal and Nodejs virtual services as **_backends_** of Frontend Virtual node:
 
 ```python
 self.mesh_frontend_vn = aws_appmesh.VirtualNode(
@@ -101,7 +130,7 @@ self.mesh_frontend_vn = aws_appmesh.VirtualNode(
 --
 ![Frontend-VN-Detail](../images/vn-frontend-detail.png)
 
-Then, we configured the app mesh envoy sidecar `self.envoy_container = self.fargate_task_def.add_container`. Then we created the Virtual Router for the Frontend. A virtual router handle traffic for one or more virtual services within your mesh. After you create a virtual router, you can create and associate routes for your virtual router that direct incoming requests to different virtual nodes. This Virtual router will be used when working with BG/Canary deployments, in a later lecture.
+Then, we configured the app mesh envoy sidecar `self.envoy_container = self.fargate_task_def.add_container`. Afterwards, we created the Virtual Router for the Frontend. A **virtual router** handles traffic for one or more virtual services within your mesh. After you create a virtual router, you can create and associate routes for your virtual router that direct incoming requests to different virtual nodes. This Virtual router will be used when working with BG/Canary deployments, in a later lecture.
 
 ```python
 # Creating a App Mesh virtual router
@@ -137,7 +166,7 @@ self.mesh_frontend_vs = aws_appmesh.VirtualService(self,"mesh-frontend-vs",
 
 ![Frontend-VS-Detail](../images/vs-frontend-router.png)
 
-And lastly, we configure the Virtual Gateway Router. A gateway route is attached to a virtual gateway and routes traffic to an existing virtual service. If a route matches a request, it can distribute traffic to a target virtual service. Basically, this a key peace when working with Virtual Gateways, so we can redirect the request to the right services.
+And lastly, we configure the Virtual Gateway Router. A **gateway route **is attached to a virtual gateway and routes traffic to an existing virtual service. If a route matches a request, it can distribute traffic to a target virtual service. Basically, this a key peace when working with Virtual Gateways, so we can redirect the request to the right services.
 
 ```python
 # Adding Virtual Gateway Route
@@ -151,35 +180,8 @@ self.mesh_gt_router = self.mesh_vgw.add_gateway_route(
 ```
 ![Frontend-VGR-Detail](../images/vgr-frontend-detail.png)
 
-### Deploying Configurations
 
-Install any CDK python prerequisites (libraries) needed by the ecsdemo-frontend application 
-```bash
-pip install --upgrade -r ~/environment/ecsdemo-frontend/cdk/requirements.txt 
-```
-
-Confirm that the CDK can synthesize the assembly CloudFormation templates
-```bash
-cd ~/environment/ecsdemo-frontend/cdk
-cdk synth
-```
-
-View proposed changes to the environment
-```bash
-cdk diff
-```
-
-Deploy the changes to the environment:
-```bash
-cdk deploy --require-approval never
-```
-
-Now, to check the application running, you can get the NLB public endpoint from the base platform output or execute the following command:
-```bash
-echo "http://$(aws cloudformation describe-stacks --stack-name ecsworkshop-base --query "Stacks[0].Outputs[?OutputKey=='MeshGwNlbDns'].OutputValue" --output text)"
-```
-
-Final abstract model of the App architecture after adding the mesh and the constructs to enable App mesh integration
+**Final abstract model of the App architecture after adding the mesh and the constructs to enable App mesh integration**
 ![final-abstract-mesh-integration](../images/ecs-app-mesh-diagram-Abstract.png)
 
 

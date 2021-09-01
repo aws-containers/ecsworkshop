@@ -54,7 +54,7 @@ sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-nodejs/cdk/app.py
 
 The `appmesh()` function will add all the required resources into the CF to configure the nodejs app to work with App Mesh. In a moment we will review the resources that were created by this function.
 
-To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations. To do so, uncomment line where we indicate the container images as follow or use this command:
+To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations. To do so, uncomment line where we indicate the container image URI as follow or use this command:
 ```bash
 #commenting previous container image repo
 sed -i -e '/brentley/s/^#*/#/' ~/environment/ecsdemo-nodejs/cdk/app.py
@@ -96,8 +96,9 @@ The information we are going to review moving forward is focused solely on the A
 {{% /notice %}}
 
 Let’s take a look at what’s being built from the App mesh perspective. 
+
 ```python
- def appmesh(self):
+    def appmesh(self):
         
         # Importing app mesh service
         self.mesh = aws_appmesh.Mesh.from_mesh_arn(
@@ -122,6 +123,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
             virtual_node_name="nodejs",
             listeners=[aws_appmesh.VirtualNodeListener.http(port=3000)],
             service_discovery=aws_appmesh.ServiceDiscovery.cloud_map(self.fargate_service.cloud_map_service),
+            access_log=aws_appmesh.AccessLog.from_file_path("/dev/stdout")
         )
         
         # App Mesh envoy proxy container configuration
@@ -129,10 +131,10 @@ Let’s take a look at what’s being built from the App mesh perspective.
             "NodeJsServiceProxyContdef",
             image=aws_ecs.ContainerImage.from_registry("public.ecr.aws/appmesh/aws-appmesh-envoy:v1.18.3.0-prod"),
             container_name="envoy",
-            memory_reservation_mib=170,
+            memory_reservation_mib=128,
             environment={
                 "REGION": getenv('AWS_DEFAULT_REGION'),
-                "ENVOY_LOG_LEVEL": "debug",
+                "ENVOY_LOG_LEVEL": "trace",
                 "ENABLE_ENVOY_STATS_TAGS": "1",
                 # "ENABLE_ENVOY_XRAY_TRACING": "1",
                 "APPMESH_RESOURCE_ARN": self.mesh_nodejs_vn.virtual_node_arn
@@ -176,7 +178,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
         #     ),
         #     essential=True,
         #     container_name="xray",
-        #     memory_reservation_mib=170,
+        #     memory_reservation_mib=256,
         #     user="1337"
         # )
         
@@ -203,7 +205,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
         self.fargate_task_def.execution_role.add_managed_policy(aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryReadOnly"))
         self.fargate_task_def.execution_role.add_managed_policy(aws_iam.ManagedPolicy.from_aws_managed_policy_name("CloudWatchLogsFullAccess"))
         self.fargate_task_def.task_role.add_managed_policy(aws_iam.ManagedPolicy.from_aws_managed_policy_name("CloudWatchFullAccess"))
-        #self.fargate_task_def.task_role.add_managed_policy(aws_iam.ManagedPolicy.from_aws_managed_policy_name("AWSXRayDaemonWriteAccess"))
+        # self.fargate_task_def.task_role.add_managed_policy(aws_iam.ManagedPolicy.from_aws_managed_policy_name("AWSXRayDaemonWriteAccess"))
         self.fargate_task_def.task_role.add_managed_policy(aws_iam.ManagedPolicy.from_aws_managed_policy_name("AWSAppMeshEnvoyAccess"))
         
         
@@ -216,8 +218,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
         # Exporting CF (outputs) to make references from other cdk projects.
         core.CfnOutput(self,"MeshNodejsVSARN",value=self.mesh_nodejs_vs.virtual_service_arn,export_name="MeshNodejsVSARN")
         core.CfnOutput(self,"MeshNodeJsVSName",value=self.mesh_nodejs_vs.virtual_service_name,export_name="MeshNodeJsVSName")
-              
-       
+        
 ```
 
 When the stack is done building, it will print out all of the outputs for the underlying CloudFormation stack. These outputs are what we use to reference the base platform when deploying the microservices. Below is an example of what the outputs look like:

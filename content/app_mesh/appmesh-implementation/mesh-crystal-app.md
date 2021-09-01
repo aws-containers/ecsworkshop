@@ -54,7 +54,7 @@ sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-crystal/cdk/app.py
 
 The `appmesh()` function will add all the required resources into the CF to configure the crystal app to work with App Mesh. In a moment we will review the resources that were created by this function.
 
-To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations.  To do so, uncomment line where we indicate the container images as follow or use this command:
+To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations.  To do so, uncomment line where we indicate the container image URI as follow or use this command:
 ```bash
 #commenting previous container image repo
 sed -i -e '/adam9098/s/^#*/#/' ~/environment/ecsdemo-crystal/cdk/app.py
@@ -96,8 +96,9 @@ The information we are going to review moving forward is focused solely on the A
 {{% /notice %}}
 
 Let’s take a look at what’s being built from the App mesh perspective. 
+
 ```python
-    def appmesh(self):
+   def appmesh(self):
         
         # Importing app mesh service
         self.mesh = aws_appmesh.Mesh.from_mesh_arn(
@@ -122,6 +123,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
             virtual_node_name="crystal",
             listeners=[aws_appmesh.VirtualNodeListener.http(port=3000)],
             service_discovery=aws_appmesh.ServiceDiscovery.cloud_map(self.fargate_service.cloud_map_service),
+            access_log=aws_appmesh.AccessLog.from_file_path("/dev/stdout")
         )
         
        # App Mesh envoy proxy container configuration
@@ -129,7 +131,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
             "CrystalServiceProxyContdef",
             image=aws_ecs.ContainerImage.from_registry("public.ecr.aws/appmesh/aws-appmesh-envoy:v1.18.3.0-prod"),
             container_name="envoy",
-            memory_reservation_mib=170,
+            memory_reservation_mib=128,
             environment={
                 "REGION": getenv('AWS_DEFAULT_REGION'),
                 "ENVOY_LOG_LEVEL": "debug",
@@ -176,7 +178,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
         #     ),
         #     essential=True,
         #     container_name="xray",
-        #     memory_reservation_mib=170,
+        #     memory_reservation_mib=256,
         #     user="1337"
         # )
         
@@ -217,6 +219,7 @@ Let’s take a look at what’s being built from the App mesh perspective.
         # Exporting CF (outputs) to make references from other cdk projects.
         core.CfnOutput(self, "MeshCrystalVSARN",value=self.mesh_crystal_vs.virtual_service_arn,export_name="MeshCrystalVSARN")
         core.CfnOutput(self, "MeshCrystalVSName",value=self.mesh_crystal_vs.virtual_service_name,export_name="MeshCrystalVSName")
+        
 ```
 
 When the stack is done building, it will print out all of the outputs for the underlying CloudFormation stack. These outputs are what we use to reference the base platform when deploying the microservices. Below is an example of what the outputs look like:
