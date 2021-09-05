@@ -72,14 +72,18 @@ Run the following command to get started with deploying our test environment:
 ```bash
 # We need the VPC ID, so we'll locate it using the AWS CLI
 vpc_id=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=BuildEc2EnvironmentStack/DemoVPC --query Vpcs[].VpcId --output text)
+echo "VPC ID == $vpc_id"
 # Next we'll initialize our environment passing in the VPC ID for our existing VPC
-copilot env init --import-vpc-id $vpc_id --name test --app migration-demo
+copilot env init --name test --app migration-demo
 ```
 
 We will be prompted with a series of questions. 
 
 - Which credentials would you like to use to create test?
   - Choose the default profile for our credentials.
+- Would you like to use the default configuration for a new environment?
+  - No, I'd like to import existing resources (VPC, subnets)
+  - Choose the VPC ID that matches what was echoed above. It also will be named this: (BuildEc2EnvironmentStack/DemoVPC)
 - Which public/private subnets would you like to use?
   - Choose all of the subnets for public and private
 
@@ -315,9 +319,9 @@ Now let's see if we can talk to our container via service discovery (which was c
 
 ```bash
 # Curl the health endpoint
-curl http://userapi.migration-demo.local:8080/health
+curl http://userapi.test.migration-demo.local:8080/health
 # Curl the all_users endpoint
-curl http://userapi.migration-demo.local:8080/all_users
+curl http://userapi.test.migration-demo.local:8080/all_users
 ```
 
 Success! We are now succesfully running our code as a container running on Amazon ECS.

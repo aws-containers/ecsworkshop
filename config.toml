@@ -14,14 +14,14 @@ hrefTargetBlank = true
 [params]
 themeVariant = "mine"
 showVisitedLinks = false
-author = "Brent Langston"
+author = "AWS Containers DA Team"
 description = "Amazon ECS Workshop"
 disableSearch = false
 disableAssetsBusting = false
 disableLanguageSwitchingButton = true
 disableShortcutsTitle=false
 disableInlineCopyToClipBoard = true
-editURL = "https://github.com/brentley/ecsworkshop/edit/main/content/"
+editURL = "https://github.com/aws-containers/ecsworkshop/edit/main/content/"
 
 [privacy]
   [privacy.googleAnalytics]
@@ -53,16 +53,10 @@ url = "https://containersfromthecouch.com"
 weight = 1
 
 [[menu.shortcuts]]
-name = "<i class='fab fa-twitter fa-lg'></i> @brentContained"
-identifier = "tw"
-url = "https://twitter.com/intent/user?screen_name=brentContained"
-weight = 2
-
-[[menu.shortcuts]]
 name = "<i class='fab fa-twitter fa-lg'></i> @realadamjkeller"
 identifier = "twa"
 url = "https://twitter.com/intent/user?screen_name=realadamjkeller"
-weight = 3
+weight = 2
 
 [[menu.shortcuts]]
 name = "<i class='fas fa-chalkboard'></i> AppMesh Workshop"
