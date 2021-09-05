@@ -54,20 +54,6 @@ sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-nodejs/cdk/app.py
 
 The `appmesh()` function will add all the required resources into the CF to configure the nodejs app to work with App Mesh. In a moment we will review the resources that were created by this function.
 
-To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations. To do so, uncomment line where we indicate the container image URI as follow or use this command:
-```bash
-#commenting previous container image repo
-sed -i -e '/brentley/s/^#*/#/' ~/environment/ecsdemo-nodejs/cdk/app.py
-#uncommenting ECR image repo
-sed -i -e '/amazonaws.com\/ecsdemo-nodejs/s/# //' ~/environment/ecsdemo-nodejs/cdk/app.py
-```
-
-so you can get:
-```python
-# image=aws_ecs.ContainerImage.from_registry("adam9098/ecsdemo-nodejs"),
-image=aws_ecs.ContainerImage.from_registry("{}.dkr.ecr.{}.amazonaws.com/ecsdemo-nodejs".format(getenv('AWS_ACCOUNT_ID'), getenv('AWS_DEFAULT_REGION'))),
-```
-
 ### Deploying Configurations
 
 Install any CDK python prerequisites (libraries) needed by the ecsdemo-nodejs application 

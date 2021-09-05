@@ -54,19 +54,6 @@ sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-crystal/cdk/app.py
 
 The `appmesh()` function will add all the required resources into the CF to configure the crystal app to work with App Mesh. In a moment we will review the resources that were created by this function.
 
-To avoid **[Docker request limits](https://www.docker.com/increase-rate-limits)** we will use our local ECR that we built at the beginning of our configurations.  To do so, uncomment line where we indicate the container image URI as follow or use this command:
-```bash
-#commenting previous container image repo
-sed -i -e '/adam9098/s/^#*/#/' ~/environment/ecsdemo-crystal/cdk/app.py
-#uncommenting ECR image repo
-sed -i -e '/amazonaws.com\/ecsdemo-crystal/s/# //' ~/environment/ecsdemo-crystal/cdk/app.py
-```
-
-so you can get:
-```python
-# image=aws_ecs.ContainerImage.from_registry("adam9098/ecsdemo-crystal"),
-image=aws_ecs.ContainerImage.from_registry("{}.dkr.ecr.{}.amazonaws.com/ecsdemo-crystal".format(getenv('AWS_ACCOUNT_ID'), getenv('AWS_DEFAULT_REGION'))),
-```
 
 ### Deploying Configurations
 
