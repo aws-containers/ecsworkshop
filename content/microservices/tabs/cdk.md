@@ -15,7 +15,7 @@ sudo curl -so /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs
 sudo chmod +x /usr/local/bin/ecs-cli
 
 # Setting CDK Version
-export AWS_CDK_VERSION="1.41.0"
+export AWS_CDK_VERSION="1.122.0"
 
 # Install aws-cdk
 npm install -g --force aws-cdk@$AWS_CDK_VERSION
@@ -28,6 +28,7 @@ aws-cdk.aws_ecs==$AWS_CDK_VERSION \
 aws-cdk.aws_servicediscovery==$AWS_CDK_VERSION \
 aws_cdk.aws_iam==$AWS_CDK_VERSION \
 aws_cdk.aws_efs==$AWS_CDK_VERSION \
+aws_cdk.aws_appmesh==$AWS_CDK_VERSION \
 awscli \
 awslogs
 
