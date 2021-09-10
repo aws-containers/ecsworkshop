@@ -45,14 +45,14 @@ class BasePlatform(core.Construct):
 
     def __init__(self, scope: core.Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
+        self.environment_name = 'ecsworkshop'
 
         # The base platform stack is where the VPC was created, so all we need is the name to do a lookup and import it into this stack for use
         self.vpc = aws_ec2.Vpc.from_lookup(
-            self, "ECSWorkshopVPC",
-            vpc_name='ecsworkshop-base/BaseVPC'
+            self, "VPC",
+            vpc_name='{}-base/BaseVPC'.format(self.environment_name)
         )
 
-        # Importing the service discovery namespace from the base platform stack
         self.sd_namespace = aws_servicediscovery.PrivateDnsNamespace.from_private_dns_namespace_attributes(
             self, "SDNamespace",
             namespace_name=core.Fn.import_value('NSNAME'),
@@ -60,7 +60,6 @@ class BasePlatform(core.Construct):
             namespace_id=core.Fn.import_value('NSID')
         )
 
-        # Importing the ECS cluster from the base platform stack
         self.ecs_cluster = aws_ecs.Cluster.from_cluster_attributes(
             self, "ECSCluster",
             cluster_name=core.Fn.import_value('ECSClusterName'),
@@ -69,7 +68,6 @@ class BasePlatform(core.Construct):
             default_cloud_map_namespace=self.sd_namespace
         )
 
-        # Importing the security group that allows frontend to communicate with backend services
         self.services_sec_grp = aws_ec2.SecurityGroup.from_security_group_id(
             self, "ServicesSecGrp",
             security_group_id=core.Fn.import_value('ServicesSecGrp')
