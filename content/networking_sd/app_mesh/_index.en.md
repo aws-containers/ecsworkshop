@@ -1,7 +1,7 @@
 ---
 title: "App Mesh Integration"
-chapter: true
-weight: 80
+chapter: false
+weight: 10
 ---
 
 # Welcome to the AWS App Mesh Workshop!
@@ -12,9 +12,7 @@ The intent of this workshop is to educate users about the features and usage of 
 
 - Introduction: A general overview of what AWS App Mesh is, its components, benefits and how it works
 - We will reuse the existing ECS workshop microservices applications and put them behind App Mesh
-    - We will implement Virtual Gateways without TLS
-    - Highlight tracing and telemetry
-    - Implement Mutual TLS
-    - Implement BG/Canary deployments
-
-
+  - We will implement Virtual Gateways without TLS
+  - Highlight tracing and telemetry
+  - Implement Mutual TLS
+  - Implement BG/Canary deployments

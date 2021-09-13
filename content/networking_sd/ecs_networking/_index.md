@@ -1,13 +1,12 @@
 ---
 title: "ECS Networking"
 chapter: true
-weight: 60
-pre: '<i class="fa fa-film" aria-hidden="true"></i> '
+weight: 05
 ---
 
 # Networking for Amazon ECS
 
-In this chapter, we will discuss the available network modes for ECS and their properties: 
+In this chapter, we will discuss the available network modes for ECS and their properties:
 
 - awsvpc
 - bridge
