@@ -2,6 +2,7 @@
 title: Clean Up
 chapter: false
 weight: 60
+hidden: true
 ---
 
 Delete the CloudFormation stack created for this workshop.

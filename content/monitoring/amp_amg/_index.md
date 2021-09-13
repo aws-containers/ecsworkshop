@@ -1,7 +1,7 @@
 ---
 title: "Monitoring using Amazon Managed Service for Prometheus / Grafana"
 chapter: true
-weight: 53
+weight: 10
 ---
 
 # Configure Amazon Managed Service for Prometheus / Grafana for your ECS cluster
