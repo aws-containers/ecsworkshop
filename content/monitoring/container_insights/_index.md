@@ -1,7 +1,7 @@
 ---
 title: "CloudWatch Container Insights"
 chapter: true
-weight: 52
+weight: 05
 pre: '<i class="fa fa-film" aria-hidden="true"></i> '
 ---
 
