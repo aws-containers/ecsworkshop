@@ -166,7 +166,7 @@ self.mesh_frontend_vs = aws_appmesh.VirtualService(self,"mesh-frontend-vs",
 
 ![Frontend-VS-Detail](../images/vs-frontend-router.png)
 
-And lastly, we configure the Virtual Gateway Router. A **gateway route **is attached to a virtual gateway and routes traffic to an existing virtual service. If a route matches a request, it can distribute traffic to a target virtual service. Basically, this a key peace when working with Virtual Gateways, so we can redirect the request to the right services.
+And lastly, we configure the Virtual Gateway Router. A **gateway route** is attached to a virtual gateway and routes traffic to an existing virtual service. If a route matches a request, it can distribute traffic to a target virtual service. Basically, this a key peace when working with Virtual Gateways, so we can redirect the request to the right services.
 
 ```python
 # Adding Virtual Gateway Route
