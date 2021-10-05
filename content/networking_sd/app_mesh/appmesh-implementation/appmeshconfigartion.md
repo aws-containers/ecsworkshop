@@ -7,7 +7,7 @@ weight = 1
 
 **AWS App Mesh** is a service mesh based on the Envoy proxy. It standardizes how microservices communicate, giving you end-to-end visibility and helping to ensure high-availability for your applications. 
 
-hroughout this workshop we will use AWS App Mesh, to gain consistent visibility and network traffic controls on our microservices running in **Amazon EC2 with Fargate**.
+Throughout this workshop we will use AWS App Mesh, to gain consistent visibility and network traffic controls on our microservices running in **Amazon EC2 with Fargate**.
 
 A service mesh is composed of two parts, a _control plane_ and a _data plane_. AWS App Mesh is a managed control plane so you as a user don’t need to install or manage any servers to run it. The data plane for App Mesh is the open source Envoy proxy. **_It is your responsability to add the Envoy proxy as a side car to each microservice you want to expose and manage via App Mesh._**
 
