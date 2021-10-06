@@ -272,7 +272,7 @@ cdk deploy --require-approval never
 
 ```bash
 alb_url=$(aws cloudformation describe-stacks --stack-name ecsworkshop-frontend --query "Stacks" --output json | jq -r '.[].Outputs[] | select(.OutputKey |contains("LoadBalancer")) | .OutputValue')
-siege -c 20 -i $alb_url&
+siege -c 20 -i $alb_url
 ```
 
 - While siege is running in the background, either navigate to the console or monitor the autoscaling from the command line.

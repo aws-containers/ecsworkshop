@@ -292,10 +292,10 @@ ec2InstanceId=$(aws cloudformation describe-stacks --stack-name ecsworkshop-base
 aws ssm start-session --target "$ec2InstanceId"
 ```
 
-- Once you are in the ec2 instance, generate the load test for the crystal service.
+- Once you are in the ec2 instance, generate the load test for the crystal service. The URL for the load test can be retrieved from the CloudMap service or the running Service in the ECS Cluster.
 
 ```bash
-siege -c 200 -i http://ecsdemo-crystal.service:3000/crystal&
+siege -c 200 -i http://ecsdemo-crystal.service.local:3000/crystal
 ```
 
 - While siege is running in the background, either navigate to the console or monitor the autoscaling from the command line in a new cloud9 terminal.
