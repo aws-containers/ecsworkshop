@@ -28,6 +28,7 @@ aws-cdk.aws_iam==$AWS_CDK_VERSION \
 aws-cdk.aws_efs==$AWS_CDK_VERSION \
 aws-cdk.aws_autoscaling==$AWS_CDK_VERSION \
 aws-cdk.aws_ssm==$AWS_CDK_VERSION \
+aws-cdk.aws_appmesh==$AWS_CDK_VERSION \
 awscli \
 awslogs
 
