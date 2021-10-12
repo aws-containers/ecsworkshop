@@ -19,7 +19,7 @@ Clone the service repos:
 ```bash
 cd ~/environment
 git clone https://github.com/aws-containers/ecsdemo-platform
-git clone https://github.com/adamjkeller/ecsdemo-capacityproviders
+git clone https://github.com/aws-containers/ecsdemo-capacityproviders
 ```
 
 #### Build the platform

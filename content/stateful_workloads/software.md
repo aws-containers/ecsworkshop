@@ -37,6 +37,6 @@ source ~/.bashrc
 
 # Clone the service repo
 cd ~/environment
-git clone https://github.com/adamjkeller/ecsworkshop-efsdemo.git
+git clone https://github.com/aws-containers/ecsworkshop-efsdemo.git
 
 ```
