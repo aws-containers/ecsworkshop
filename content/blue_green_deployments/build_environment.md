@@ -11,7 +11,6 @@ sudo yum install -y jq
 npm i -g -f aws-cdk@1.54.0
 nvm install 14.15.4
 nvm use 14.15.4
-
 ```
 
 #### Navigate to the repo
