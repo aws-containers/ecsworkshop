@@ -36,3 +36,11 @@ weight = 3
 10. **Some of the services that will not be supported part of ECS Anywhere GA?**
 
     Application load balancing, autoscaling, cloudmap service discovery and volume attachments (EBS & EFS) to ECS Tasks as these services are running on-prem.
+    
+11. **Can I run GPU-based workloads on ECS Anywhere?**
+    
+    Yes. 
+    You can enable GPU instances by adding the --enable-gpu flag to the Amazon ECS Anywhere installation script. 
+    Once the script is installed, you will be able to assign a number of GPUs to particular containers in the task definition. 
+    Amazon ECS uses this as a scheduling mechanism to pin physical GPUs to the desired containers for workload isolation and optimal performance. 
+    You can use Nvidia and CUDA drivers with Amazon ECS Anywhere by following the steps to install the drivers as provided [here](https://docs.nvidia.com/datacenter/tesla/tesla-installation-notes/index.html).

@@ -33,7 +33,7 @@ git clone https://github.com/aws-containers/ecsdemo-crystal
 
 #### Build the platform
 
-First, we need to build the environment for our frontend service to run. For more information on what we're building, you can review the code here: [Platform](../../microservices/platform/build_environment).
+First, we need to build the environment for our frontend service to run. For more information on what we're building, you can review the code here: [Platform](../../../microservices/platform/build_environment).
 
 ```bash
 cd ~/environment/ecsdemo-platform/cdk
@@ -43,7 +43,7 @@ cdk context --clear && cdk deploy --require-approval never
 
 #### Deploy the microservices
 
-Next, we will deploy a three-tier polyglot web app to our ECS cluster. For more information on what is being deployed, see the [microservices](../../microservices) section of the workshop.
+Next, we will deploy a three-tier polyglot web app to our ECS cluster. For more information on what is being deployed, see the [microservices](../../../microservices) section of the workshop.
 
 ```bash
 cd ~/environment/ecsdemo-frontend/cdk
