@@ -10,5 +10,6 @@ weight: 70
 cd ~/environment/ecsdemo-migration-to-ecs/app
 copilot app delete --name migration-demo --yes
 cd ~/environment/ecsdemo-migration-to-ecs/build_ec2_environment
+source .env/bin/activate
 cdk destroy -f
 ```
