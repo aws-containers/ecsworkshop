@@ -6,9 +6,9 @@ weight = 8
 
 #### Open the CodeCommit repository
 
-![navigate-to-code-commit](/images/blue-green-navigate-to-code-commit.gif)
+![navigate-to-codecommit](/images/blue-green-navigate-to-codecommit.gif)
 
-#### CodeBuild uses the `buildspec.yml` for building the docker image and pushing to the Elastic Container Registry
+#### CodeBuild uses the `buildspec.yml` for building the container image and pushing to the Elastic Container Registry
 
 * Keep `buildspec.yml` in the root of the source code repository.
 
@@ -44,10 +44,6 @@ phases:
       - sed -i 's@AWS_REGION@'$AWS_REGION'@g' taskdef.json
       - echo update the roles in task definition...
       - sed -i 's@TASK_EXECUTION_ARN@'$TASK_EXECUTION_ARN'@g' taskdef.json
-      - echo update the task family name in task definition...
-      - sed -i 's@TASK_FAMILY@'$TASK_FAMILY'@g' taskdef.json
-      - echo update the container name in appspec.yaml...
-      - sed -i 's@TASK_FAMILY@'$TASK_FAMILY'@g' appspec.yaml
 artifacts:
   files:
     - "appspec.yaml"
@@ -58,7 +54,7 @@ artifacts:
 
 * The artifacts `appspec.yaml` and `taskdef.json` are used by the CodeDeploy.
 
-* For Amazon ECS compute platform applications, the AppSpec file is used by CodeDeploy to determine your Amazon ECS task definition file. `TASK_DEFINITION` placeholder will be replaced by the CodeDeploy automatically after registering the new `taskdef.json`. We will replace the `TASK_FAMILY` in the build stage.
+* For Amazon ECS compute platform applications, the AppSpec file is used by CodeDeploy to determine your Amazon ECS task definition file. `TASK_DEFINITION` placeholder will be replaced by the CodeDeploy automatically after registering the new `taskdef.json`.
 
 {{%expand "Expand to see appspec.yaml" %}}
 ```yaml
@@ -69,15 +65,16 @@ Resources:
       Properties:
         TaskDefinition: "<TASK_DEFINITION>"
         LoadBalancerInfo:
-          ContainerName: "TASK_FAMILY"
+          ContainerName: "nginx-sample"
           ContainerPort: 80
+
 ```
 {{% /expand %}}
 
 * `taskdef.json` is the ECS task definition. New version is created by CodeDeploy for each deployment. We are replacing the below placeholders in the CodeBuild phase of the CodePipeline
     * AWS_REGION
-    * TASK_FAMILY
     * REPOSITORY_URI:IMAGE_TAG
+    * TASK_EXECUTION_ARN
 
 {{%expand "Expand to see taskdef.json" %}}
 
@@ -85,7 +82,7 @@ Resources:
 {
   "containerDefinitions": [
     {
-      "name": "TASK_FAMILY",
+      "name": "nginx-sample",
       "image": "REPOSITORY_URI:IMAGE_TAG",
       "portMappings": [
         {
@@ -95,65 +92,36 @@ Resources:
       ],
       "essential": true,
       "dockerLabels": {
-        "name": "TASK_FAMILY"
+        "name": "nginx-sample"
       },
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/TASK_FAMILY",
+          "awslogs-group": "/ecs/nginx-sample",
           "awslogs-region": "AWS_REGION",
-          "awslogs-stream-prefix": "TASK_FAMILY"
+          "awslogs-stream-prefix": "nginx-sample"
         }
       }
     }
   ],
   "taskRoleArn": "TASK_EXECUTION_ARN",
   "executionRoleArn": "TASK_EXECUTION_ARN",
-  "family": "TASK_FAMILY",
+  "family": "nginx-sample",
   "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
   "cpu": "256",
   "memory": "1024"
 }
+
 ```
 {{% /expand %}}
 
 * The placeholders for `appspec.yaml` and `taskdef.json` are being replaced in the `buildspec.yml` 
 * The CodeBuild job has the required values available as `ENVIRONMENT` variables in the CDK stack
 
-{{%expand "Expand to see CodeBuild config" %}}
-```typescript
-// Creating the code build project
-const demoAppCodeBuild = new codeBuild.Project(this, "demoAppCodeBuild", {
-    role: codeBuildServiceRole,
-    description: "Code build project for the demo application",
-    environment: {
-        buildImage: codeBuild.LinuxBuildImage.STANDARD_4_0,
-        computeType: ComputeType.SMALL,
-        privileged: true,
-        environmentVariables: {
-            REPOSITORY_URI: {
-                value: ecrRepo.repositoryUri,
-                type: BuildEnvironmentVariableType.PLAINTEXT
-            },
-            TASK_EXECUTION_ARN: {
-                value: ecsTaskRole.roleArn,
-                type: BuildEnvironmentVariableType.PLAINTEXT
-            },
-            TASK_FAMILY: {
-                value: BlueGreenUsingEcsStack.ECS_TASK_FAMILY_NAME,
-                type: BuildEnvironmentVariableType.PLAINTEXT
-            }
-        }
-    },
-    source: codeBuild.Source.codeCommit({
-        repository: codeRepo
-    })
-});
-```
-{{% /expand %}}
-
-We have completed the review for the Blue/Green deployment using CodeDeploy and ECS. Let's cleanup the resources.
+We have completed the review for the blue/green deployment using CodeDeploy and ECS. Let's cleanup the resources.
 
 
 
