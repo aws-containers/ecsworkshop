@@ -11,7 +11,7 @@ We can access the deployed blue version via the load balancer url. Let's open it
 Run the following command to get the url:
 
 ```bash
-echo "http://$load_balancer_url"
+echo "http://$ALB_DNS"
 ```
 
 #### Result
@@ -20,4 +20,4 @@ echo "http://$load_balancer_url"
 
 ![blue-deployment](/images/blue-green-deployment-1.png)
 
-* Now it's time to setup a git repository in CodeCommit for the Green deployment
+* Now it's time to update the CodeCommit repository for the green deployment
