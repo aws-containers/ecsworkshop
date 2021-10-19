@@ -29,7 +29,7 @@ Note: The executables you want to run in the interactive shell session must be a
 
 ```
 source ~/.bashrc
-cd ~/environment/ecsworkshop/content/ecs_networking/setup
+cd ~/environment/ecsworkshop/content/networking_sd/ecs_networking/setup/
 export TASK_FILE=ecs-networking-demo-none-mode.json
 envsubst < ${TASK_FILE}.template > ${TASK_FILE}
 export TASK_DEF=$(aws ecs register-task-definition --cli-input-json file://${TASK_FILE} --query 'taskDefinition.taskDefinitionArn' --output text)

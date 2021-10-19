@@ -50,7 +50,7 @@ Note: The executables you want to run in the interactive shell session must be a
 
 ```
 source ~/.bashrc
-cd ~/environment/ecsworkshop/content/ecs_networking/setup
+cd ~/environment/ecsworkshop/content/networking_sd/ecs_networking/setup/
 export TASK_FILE=ecs-networking-demo-host-mode.json
 envsubst < ${TASK_FILE}.template > ${TASK_FILE}
 export TASK_DEF=$(aws ecs register-task-definition --cli-input-json file://${TASK_FILE} --query 'taskDefinition.taskDefinitionArn' --output text)
@@ -213,7 +213,7 @@ aws ecs run-task --cluster ${ClusterName} --task-definition ${TASK_DEF} --enable
 and you will observe an error like the following with "reason": "RESOURCE:PORTS". This is because the host port is already in use!
 
 ```
-Admin:~/environment/ecsworkshop/content/ecs_networking/setup (main) $ aws ecs run-task --cluster ${ClusterName} --task-definition ${TASK_DEF} --enable-execute-command --launch-type EC2 
+Admin:~/environment/ecsworkshop/content/networking_sd/ecs_networking/setup (main) $ aws ecs run-task --cluster ${ClusterName} --task-definition ${TASK_DEF} --enable-execute-command --launch-type EC2 
 {
     "failures": [
         {
