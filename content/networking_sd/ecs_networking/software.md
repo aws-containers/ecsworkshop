@@ -128,7 +128,7 @@ aws iam put-role-policy \
 --policy-document file://task-role-policy.json
 
 # Create ECS cluster
-cd ~/environment/ecsworkshop/content/ecs_networking/setup
+cd ~/environment/ecsworkshop/content/networking_sd/ecs_networking/setup/
 export STACK_NAME=ecs-networking-demo
 aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://Cluster-ECS-EC2-2AZ-1NAT.yaml --capabilities CAPABILITY_IAM
 # wait a couple of minutes until the following command shows CREATE_COMPLETE
