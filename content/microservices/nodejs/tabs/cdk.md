@@ -290,10 +290,10 @@ ec2InstanceId=$(aws cloudformation describe-stacks --stack-name ecsworkshop-base
 aws ssm start-session --target "$ec2InstanceId"
 ```
 
-- Once you are in the ec2 instance, generate the load test for the nodejs service.
+- Once you are in the ec2 instance, generate the load test for the nodejs service. The URL for the load test can be retrieved from the CloudMap service or the running Service in the ECS Cluster.
 
 ```bash
-siege -c 100 -i http://ecsdemo-nodejs.service:3000&
+siege -c 100 -i http://ecsdemo-nodejs.service.local:3000
 ```
 
 - While siege is running in the background, either navigate to the console or monitor the autoscaling from the command line in a new cloud9 terminal.
