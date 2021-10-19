@@ -77,7 +77,6 @@ a6dfe40493ce        amazon/amazon-ecs-agent:latest   "/agent"               9 mi
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
 
-
 [root@ip-xxx ~]# docker inspect -f '{{json .NetworkSettings.Networks}}' $CONT_ID                                                                                                                                                                                     
 {"none":{"IPAMConfig":null,"Links":null,"Aliases":null,"NetworkID":"c2512c49db341053a472cde122e2e0f49f46f03c2bf512398d6f5b09e2ede8c9","EndpointID":"9ac96de075669772d23bf13c32c5878606b038e248c55f346e95b5b96e15cd28","Gateway":"","IPAddress":"","IPPrefixLen":0,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"MacAddress":"","DriverOpts":null}}
 ```
