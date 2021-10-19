@@ -312,10 +312,7 @@ watch -d -n 3 echo `aws ecs describe-services --cluster container-demo --service
 
 - Now that we've seen the service autoscale out, let's stop the running while loop. Simply press `control + c` to cancel.
 
-- Time to cancel the load test. By prepending our command with `&`, we instructed it to run in the background. Bring it back to the foreground, and stop it. To stop it, type the following:
-
-  - `fg`
-  - `control + c`
+- Time to cancel the load test. To stop it, type the following: `control + c`
 
 - NOTE: To ensure application availability, the service scales out proportionally to the metric as fast as it can, but scales in more gradually. For more information, see the [documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-autoscaling-targettracking.html)
 
