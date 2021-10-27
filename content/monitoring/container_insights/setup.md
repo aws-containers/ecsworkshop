@@ -35,7 +35,7 @@ aws cloudformation create-stack --stack-name CWAgentECS-$clustername-${AWS_REGIO
 Execute the following command
 
 ```
-aws ecs describe-clusters --cluster ${clustername}
+aws ecs describe-clusters --cluster ${clustername} --include SETTINGS
 ```
 Your output should be similar to the one below. You should see Container Insights being enabled under **settings** section in the JSON.
 
