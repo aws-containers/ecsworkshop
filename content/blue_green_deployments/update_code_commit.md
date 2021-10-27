@@ -4,29 +4,13 @@ chapter = false
 weight = 5
 +++
 
-#### Push the source code to the CodeCommit repository
-The stack created an empty CodeCommit repository - `demo-app`. Now we will populate it with a sample demo application.
-
-#### Clone the demo application
-```bash
-cd ~/environment
-git clone https://github.com/smuralee/nginx-example.git
-```
-
-#### Update the remote origin URL
-Change the remote origin to the CodeCommit repository. We fetch the repository URL
+#### Edit the `index.html` to change the `background-color` to `green`
 
 ```bash
-cd ~/environment/nginx-example
-git remote set-url origin $(aws codecommit get-repository --repository-name demo-app | jq -r '.repositoryMetadata.cloneUrlHttp')
+cd ~/environment/nginx-sample/
+vim index.html
 ```
 
-#### Verify the remote origin url is pointing to the CodeCommit repository
-```bash
-git remote -v
-```
-
-#### Edit the `index.html`. We change the `background-color` to `green`
 ```html
 <head>
   <title>Demo Application</title>
@@ -37,7 +21,6 @@ git remote -v
   </h1>
 </body>
 ```
-
 
 #### Push the code to the CodeCommit repository
 ```bash
@@ -59,7 +42,6 @@ git push
     * **Deploy**
         * Initiate the blue/green deployment for the ECS service
 
-![Navigate-to-CodePipeline](/images/blue-green-navigate-to-code-pipeline.gif)
+![Navigate-to-CodePipeline](/images/blue-green-navigate-to-codepipeline.gif)
 
 * Next we will review the deployment
-

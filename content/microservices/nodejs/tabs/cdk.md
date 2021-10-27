@@ -290,10 +290,10 @@ ec2InstanceId=$(aws cloudformation describe-stacks --stack-name ecsworkshop-base
 aws ssm start-session --target "$ec2InstanceId"
 ```
 
-- Once you are in the ec2 instance, generate the load test for the nodejs service.
+- Once you are in the ec2 instance, generate the load test for the nodejs service. The URL for the load test can be retrieved from the CloudMap service or the running Service in the ECS Cluster.
 
 ```bash
-siege -c 100 -i http://ecsdemo-nodejs.service:3000&
+siege -c 100 -i http://ecsdemo-nodejs.service.local:3000
 ```
 
 - While siege is running in the background, either navigate to the console or monitor the autoscaling from the command line in a new cloud9 terminal.
@@ -303,17 +303,14 @@ siege -c 100 -i http://ecsdemo-nodejs.service:3000&
 - Compare the tasks running vs tasks desired. As the load increases on the nodejs service, we should see these counts eventually increase up to 10. This is autoscaling happening in real time. Please note that this step will take a few minutes. Feel free to run this in one terminal, and move on to the next steps in another terminal.
 
 ```bash
-watch -d -n 3 echo `aws ecs describe-services --cluster container-demo --services ecsdemo-nodejs | jq '.services[] | "Tasks Desired: \(.desiredCount) vs Tasks Running: \(.runningCount)"'`
+while true; do sleep 3; aws ecs describe-services --cluster container-demo --services ecsdemo-nodejs | jq '.services[] | "Tasks Desired: \(.desiredCount) vs Tasks Running: \(.runningCount)"'; done
 ```
 
 ![task-as-loadtest-output](/images/cdk-task-nodejs-ssm-ec2-autoscale-loadtest-output.png)
 
 - Now that we've seen the service autoscale out, let's stop the running while loop. Simply press `control + c` to cancel.
 
-- Time to cancel the load test. By prepending our command with `&`, we instructed it to run in the background. Bring it back to the foreground, and stop it. To stop it, type the following:
-
-  - `fg`
-  - `control + c`
+- Time to cancel the load test. To stop it, type the following: `control + c`
 
 - NOTE: To ensure application availability, the service scales out proportionally to the metric as fast as it can, but scales in more gradually. For more information, see the [documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-autoscaling-targettracking.html)
 
