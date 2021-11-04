@@ -189,14 +189,6 @@ Now let's test that our container is working as we expect.
 curl localhost:8080/health
 ```
 
-```bash
-curl -s localhost:8080/all_users | jq
-```
-
-```bash
-curl -s 'localhost:8080/user/?first=Sheldon&last=Cooper' | jq
-```
-
 That's it! We packaged our application into a container image using Docker and ran it locally.
 This is very impactful to our workflow as this image will be no different than the one running in a production environment, adjusting only the environment variables to determine what database we interact with.
 
