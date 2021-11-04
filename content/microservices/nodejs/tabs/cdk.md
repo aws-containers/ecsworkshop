@@ -303,7 +303,7 @@ siege -c 100 -i http://ecsdemo-nodejs.service.local:3000
 - Compare the tasks running vs tasks desired. As the load increases on the nodejs service, we should see these counts eventually increase up to 10. This is autoscaling happening in real time. Please note that this step will take a few minutes. Feel free to run this in one terminal, and move on to the next steps in another terminal.
 
 ```bash
-watch -d -n 3 echo `aws ecs describe-services --cluster container-demo --services ecsdemo-nodejs | jq '.services[] | "Tasks Desired: \(.desiredCount) vs Tasks Running: \(.runningCount)"'`
+while true; do sleep 3; aws ecs describe-services --cluster container-demo --services ecsdemo-nodejs | jq '.services[] | "Tasks Desired: \(.desiredCount) vs Tasks Running: \(.runningCount)"'; done
 ```
 
 ![task-as-loadtest-output](/images/cdk-task-nodejs-ssm-ec2-autoscale-loadtest-output.png)
