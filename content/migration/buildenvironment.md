@@ -9,13 +9,18 @@ Run the commands below and while the build is happening, proceed to the code rev
 
 ```bash
 # Setup virtual environment
-cd ~/environment/ecsdemo-migration-to-ecs/build_ec2_environment 
+cd ~/environment/ecsdemo-migration-to-ecs/build_ec2_environment
+
 virtualenv .env 
+
 source .env/bin/activate
+
 # Install packages
 pip3 install -r requirements.txt
+
 # Deploy the environment
 cdk deploy --require-approval never
+
 ```
  
 #### Code Review
