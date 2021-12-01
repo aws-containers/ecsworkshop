@@ -63,6 +63,15 @@ Install jq, as we will use this quite a bit throughout the workshop when interac
 ```sh
 sudo yum install -y jq
 ```
+
+Upgrade AWS CLI according to guidance in [AWS documentation](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html).
+
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
+
 To ensure temporary credentials aren't already in place we will remove
 any existing credentials file as well as disabling **AWS managed temporary credentials** for Cloud9:
 
