@@ -56,21 +56,18 @@ in the Cloud9 workspace menu.
 - Choose **ecsworkshop-admin** from the **IAM Role** drop down, and select **Apply**
 ![c9attachrole](/images/c9attachrole.png)
 
-- Return to your workspace and click the gear icon (in top right corner), or click to open a new tab and choose "Open Preferences"
-- Select **AWS SETTINGS**
-- Turn off **AWS managed temporary credentials**
-- Close the Preferences tab
-![c9disableiam](/images/c9disableiam.png)
+- Return to your workspace terminal and perform the next steps
 
 Install jq, as we will use this quite a bit throughout the workshop when interacting with json outputs.
 
 ```sh
 sudo yum install -y jq
 ```
+To ensure temporary credentials aren't already in place we will remove
+any existing credentials file as well as disabling **AWS managed temporary credentials** for Cloud9:
 
-To ensure temporary credentials aren't already in place we will also remove
-any existing credentials file:
 ```sh
+aws cloud9 update-environment  --environment-id $C9_PID --managed-credentials-action DISABLE
 rm -vf ${HOME}/.aws/credentials
 ```
 
