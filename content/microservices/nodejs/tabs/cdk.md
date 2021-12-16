@@ -96,7 +96,7 @@ class NodejsService(core.Stack):
         # The container definition defines the container(s) to be run when the task is instantiated
         self.container = self.fargate_task_def.add_container(
             "NodeServiceContainerDef",
-            image=aws_ecs.ContainerImage.from_registry("brentley/ecsdemo-nodejs"),
+            image=aws_ecs.ContainerImage.from_registry("public.ecr.aws/aws-containers/ecsdemo-nodejs"),
             memory_reservation_mib=512,
             logging=aws_ecs.LogDriver.aws_logs(
                 stream_prefix='ecsworkshop-nodejs'
