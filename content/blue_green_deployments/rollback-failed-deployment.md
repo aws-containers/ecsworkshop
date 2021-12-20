@@ -77,11 +77,11 @@ http {
 
 #### Push the code to the CodeCommit repository
 ```bash
-cd ~/environment/nginx-example
+cd ~/environment/nginx-sample
 git add .
 git commit -m "Returning 500 error"
 git push
-``` 
+```
 
 #### The code push will trigger the CodePipeline
 
