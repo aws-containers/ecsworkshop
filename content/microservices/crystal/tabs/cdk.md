@@ -96,7 +96,7 @@ class CrystalService(core.Stack):
         # The container definition defines the container(s) to be run when the task is instantiated
         self.container = self.fargate_task_def.add_container(
             "CrystalServiceContainerDef",
-            image=aws_ecs.ContainerImage.from_registry("brentley/ecsdemo-crystal"),
+            image=aws_ecs.ContainerImage.from_registry("public.ecr.aws/aws-containers/ecsdemo-crystal"),
             memory_reservation_mib=512,
             logging=aws_ecs.LogDriver.aws_logs(
                 stream_prefix='ecsworkshop-crystal'

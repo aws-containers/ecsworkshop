@@ -88,7 +88,7 @@ class FrontendService(core.Stack):
 
         # This defines some of the components required for the docker container to run
         self.fargate_task_image = aws_ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-            image=aws_ecs.ContainerImage.from_registry("brentley/ecsdemo-frontend"),
+            image=aws_ecs.ContainerImage.from_registry("public.ecr.aws/aws-containers/ecsdemo-frontend"),
             container_port=3000,
             environment={
                 "CRYSTAL_URL": "http://ecsdemo-crystal.service:3000/crystal",
