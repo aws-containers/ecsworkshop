@@ -117,7 +117,7 @@ If the IAM role is not valid, <span style="color: red;">**DO NOT PROCEED**</span
 ```bash
 pip3 install --user --upgrade boto3
 export instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-python -c "import boto3
+python3 -c "import boto3
 import os
 from botocore.exceptions import ClientError 
 ec2 = boto3.client('ec2')
