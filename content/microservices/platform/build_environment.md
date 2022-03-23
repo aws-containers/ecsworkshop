@@ -14,6 +14,8 @@ aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws iam 
 aws iam get-role --role-name "AWSServiceRoleForECS" || aws iam create-service-linked-role --aws-service-name "ecs.amazonaws.com"
 ```
 
+- You may see "An error occurred (NoSuchEntity)" and that's ok! We create the required roles if they don't exist, which is what happens after the `||` operator.
+
 - Install the session Manager plugin into cloud9 so we can connect to the temporary EC2 instance that we will use to load test the nodejs and crystal services
 
 ```shell
