@@ -21,3 +21,9 @@ git clone https://github.com/aws-containers/ecsdemo-frontend
 git clone https://github.com/aws-containers/ecsdemo-nodejs
 git clone https://github.com/aws-containers/ecsdemo-crystal
 ```
+
+Let's pin our CDK libraries to our CLI version
+
+```bash
+for i in ecsdemo-*/cdk/requirements.txt ; do sed -i "s/$/==$AWS_CDK_VERSION/g" $i ; done
+```
