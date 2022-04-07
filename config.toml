@@ -59,11 +59,6 @@ url = "https://twitter.com/intent/user?screen_name=realadamjkeller"
 weight = 2
 
 [[menu.shortcuts]]
-name = "<i class='fas fa-chalkboard'></i> AppMesh Workshop"
-url = "https://appmeshworkshop.com"
-weight = 6
-
-[[menu.shortcuts]]
 name = "<i class='fas fa-chalkboard'></i> EKS Workshop"
 url = "https://eksworkshop.com"
 weight = 7
