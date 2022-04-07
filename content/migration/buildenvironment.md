@@ -11,7 +11,7 @@ Run the commands below and while the build is happening, proceed to the code rev
 # Setup virtual environment
 cd ~/environment/ecsdemo-migration-to-ecs/build_ec2_environment
 
-virtualenv .env 
+virtualenv .env
 
 source .env/bin/activate
 
@@ -22,7 +22,7 @@ pip3 install -r requirements.txt
 cdk deploy --require-approval never
 
 ```
- 
+
 #### Code Review
 
 We are using the [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to provision our resources for our environment, which we plan to migrate from.
@@ -34,7 +34,7 @@ This ensures the service is started and enabled every time a new EC2 instance la
 
 The code can be reviewed in full under `./build_ec2_environment/build_ec2_environment_stack.py`.
 
-First, we're creating our VPC and DynamoDB table. 
+First, we're creating our VPC and DynamoDB table.
 Note that the VPC construct is going to build a VPC in an opinionated way taking advantage of recommended practices.
 
 ```python
@@ -56,7 +56,7 @@ Lastly, we are managing instance count and scaling through an Autoscaling group.
 
 ```python
 user_data = ec2.UserData.custom(f"""#!/usr/bin/env bash
-        
+
 # Pulling down the code and creating necessary folders/user
 wget https://gist.githubusercontent.com/adamjkeller/cb2dfcd2ad6c6dc74d02c83759f2a1c5/raw/93b65f6b11d07574667d636678e7716b805a8097/setup.sh
 bash -x ./setup.sh
@@ -79,7 +79,7 @@ EOF
 systemctl enable user-api.service
 systemctl start user-api.service
 """)
-        
+
 asg = autoscaling.AutoScalingGroup(
     self, "ApplicationASG",
     instance_type=ec2.InstanceType('t3.small'),

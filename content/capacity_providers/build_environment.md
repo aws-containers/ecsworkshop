@@ -19,7 +19,7 @@ Clone the service repos:
 ```bash
 cd ~/environment
 git clone https://github.com/aws-containers/ecsdemo-platform
-git clone https://github.com/adamjkeller/ecsdemo-capacityproviders
+git clone https://github.com/aws-containers/ecsdemo-capacityproviders
 ```
 
 #### Build the platform
@@ -30,7 +30,6 @@ First, we need to build the environment for our frontend service to run. For mor
 cd ~/environment/ecsdemo-platform/cdk
 cdk context --clear && cdk deploy --require-approval never
 ```
-
 
 #### Next page
 
