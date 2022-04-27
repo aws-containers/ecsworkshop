@@ -6,7 +6,7 @@ hidden: true
 
 ```bash
 cd ~/environment
-git clone https://github.com/mptaws/secretecs
+git clone https://github.com/aws-containers/ecsworkshop-secrets-demo.git
 cd secretecs
 npm install
 ```
