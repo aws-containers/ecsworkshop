@@ -22,7 +22,7 @@ In the Cloud9 workspace, run the following commands:
 ```bash
 cd ~/environment/ecsdemo-amp/cdk
 
-export AMP_WORKSPACE_ID=$(aws amp list-workspaces --query 'workspaces[*].workspaceId' --output text)
+export AMP_WORKSPACE_ID=$(aws amp list-workspaces --alias ecs-workshop --query 'workspaces[*].workspaceId' --output text | awk '{print $1;}')
 export AMP_Prometheus_Endpoint=$(aws amp describe-workspace --workspace-id $AMP_WORKSPACE_ID --query 'workspace.prometheusEndpoint' --output text)
 export AMP_Prometheus_Remote_Write_Endpoint='"'${AMP_Prometheus_Endpoint}api/v1/remote_write'"'
 
