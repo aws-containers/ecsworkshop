@@ -11,7 +11,7 @@ hidden: true
 sudo yum -y install nodejs python
 
 # Setting CDK Version
-export AWS_CDK_VERSION="1.95.1"
+export AWS_CDK_VERSION="2.25.0"
 
 # Install aws-cdk
 npm install -g --force aws-cdk@$AWS_CDK_VERSION
