@@ -11,6 +11,9 @@ In the Cloud9 workspace, run the following commands:
 ```
 # Install prerequisite packages
 sudo yum -y install jq gettext
+
+# Install aws-cdk
+npm install --force -g aws-cdk@2.25.0
 ```
 jq is a tool that can be used to extract and transform data held in JSON files.
 
