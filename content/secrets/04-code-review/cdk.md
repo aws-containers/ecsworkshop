@@ -9,14 +9,14 @@ hidden: true
 First, let's test the existing code for any errors.
 
 ```bash
-cd ~/environment/secret-ecs-cdk-example
+cd ~/environment/ecsworkshop-secrets-demo
 cdk synth
 ```
 
 This creates the cloudformation templates which output to a local directory `cdk.out`.   Successful output will contain (ignore any warnings generated):
 
 ```bash
-Successfully synthesized to /home/ec2-user/environment/secret-ecs-cdk-example/cdk.out
+Successfully synthesized to /home/ec2-user/environment/ecsworkshop-secrets-demo/cdk.out
 Supply a stack id (VPCStack, RDSStack, ECSStack) to display its template.
 ```
 
