@@ -90,8 +90,8 @@ this.codeBuildProject = new codeBuild.Project(this, 'codeBuild', {
 
 #### Let's push the nginx code sample into CodeCommit repository
 
-* The source code is available [here](https://github.com/aws-containers/ecs-workshop-blue-green-deployments/blob/blue-green-deployment/nginx-sample)
-* The [buildspec.yml](https://github.com/aws-containers/ecs-workshop-blue-green-deployments/blob/blue-green-deployment/nginx-sample/buildspec.yml) has placeholders for the variables
+* The source code is available [here](https://github.com/aws-containers/ecs-workshop-blue-green-deployments/tree/main/nginx-sample)
+* The [buildspec.yml](https://github.com/aws-containers/ecs-workshop-blue-green-deployments/blob/main/nginx-sample/buildspec.yml) has placeholders for the variables
 * Follow the below steps to upload the code into CodeCommit repository created earlier
 
 ```bash
