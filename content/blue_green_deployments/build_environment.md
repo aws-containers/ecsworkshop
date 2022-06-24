@@ -8,9 +8,9 @@ weight = 3
 
 ```bash
 sudo yum install -y jq
-npm i -g -f aws-cdk@1.128.0
 nvm install 16.10.0
 nvm use 16.10.0
+npm i -g -f aws-cdk@1.128.0
 ```
 
 #### Navigate to the repo
