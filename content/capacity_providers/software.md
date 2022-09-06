@@ -13,7 +13,7 @@ In the Cloud9 workspace, run the following commands:
 sudo yum -y install jq nodejs python36
 
 # Setting CDK Version
-export AWS_CDK_VERSION="1.41.0"
+export AWS_CDK_VERSION="1.171.0"
 
 # Install aws-cdk
 npm install -g --force aws-cdk@$AWS_CDK_VERSION
