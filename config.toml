@@ -53,12 +53,6 @@ url = "https://containersfromthecouch.com"
 weight = 1
 
 [[menu.shortcuts]]
-name = "<i class='fab fa-twitter fa-lg'></i> @realadamjkeller"
-identifier = "twa"
-url = "https://twitter.com/intent/user?screen_name=realadamjkeller"
-weight = 2
-
-[[menu.shortcuts]]
 name = "<i class='fas fa-chalkboard'></i> EKS Workshop"
 url = "https://eksworkshop.com"
 weight = 7
