@@ -1,7 +1,7 @@
 ---
 title: "ECS Anywhere"
 chapter: true
-weight: 70
+weight: 80
 ---
 
 # Welcome to the ECS-Anywhere Workshop!
