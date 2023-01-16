@@ -48,20 +48,13 @@ First, let's look at the application context variables:
 ```json
 {
   "app": "npx ts-node --prefer-ts-exts bin/secret-ecs-app.ts",
-  "context": {
-    "@aws-cdk/core:enableStackNameDuplicates": "true",
-    "aws-cdk:enableDiffNoFail": "true",
-    "@aws-cdk/core:stackRelativeExports": "true",
-    "@aws-cdk/aws-ecr-assets:dockerIgnoreSupport": true,
-    "@aws-cdk/aws-secretsmanager:parseOwnedSecretName": true,
-    "@aws-cdk/aws-kms:defaultKeyPolicies": true,
-    "@aws-cdk/aws-s3:grantWriteWithoutAcl": true,
+    "context": {
     "dbName": "tododb",
     "dbUser": "postgres",
     "dbPort": 5432,
     "containerPort": 4000,
-    "containerImage": "public.ecr.aws/o0u3i9v5/secret-ecs-repo"
-  }
+    "containerImage": "registry.hub.docker.com/mptaws/secretecs"
+    }
 }
 ```
 
@@ -81,15 +74,16 @@ Next, let's look at the Cloudformation stacks constructs.   The files in `lib` e
 {{%expand "Review lib/vpc-stack.ts" %}}
 
 ```ts
-import { App, Stack, StackProps, Construct } from '@aws-cdk/core';
-import { Vpc, SubnetType } from '@aws-cdk/aws-ec2'
+import { Construct } from 'constructs';
+import { App, Stack, StackProps } from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
 
 export interface VpcProps extends StackProps {
     maxAzs: number;
 }
 
 export class VPCStack extends Stack {
-    readonly vpc: Vpc;
+    readonly vpc: ec2.Vpc;
 
     constructor(scope: Construct, id: string, props: VpcProps) {
         super(scope, id, props);
@@ -98,18 +92,18 @@ export class VPCStack extends Stack {
             throw new Error('maxAzs must be at least 2.');
         }
 
-        this.vpc = new Vpc(this, 'ecsWorkshopVPC', {
-            cidr: "10.0.0.0/16",
+        this.vpc = new ec2.Vpc(this, 'ecsWorkshopVPC', {
+            ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16'),
             subnetConfiguration: [
                 {
                     cidrMask: 24,
                     name: 'public',
-                    subnetType: SubnetType.PUBLIC,
+                    subnetType: ec2.SubnetType.PUBLIC,
                 },
                 {
                     cidrMask: 24,
                     name: 'private',
-                    subnetType: SubnetType.PRIVATE,
+                    subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
                 },
             ],
         });
@@ -123,31 +117,29 @@ The VPC stack creates a new VPC within the AWS account.   The CIDR address space
 {{%expand "Review lib/rds-stack.ts" %}}
 
 ```ts
-import { App, StackProps, Stack, Duration, RemovalPolicy } from "@aws-cdk/core";
-import {
-    DatabaseSecret, Credentials, ServerlessCluster, DatabaseClusterEngine, ParameterGroup, AuroraCapacityUnit
-} from '@aws-cdk/aws-rds';
-import { Vpc, Port, SubnetType } from '@aws-cdk/aws-ec2';
-import { Secret, SecretRotation, SecretRotationApplication } from '@aws-cdk/aws-secretsmanager';
+import { App, StackProps, Stack, Duration, RemovalPolicy, CfnOutput } from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as rds from 'aws-cdk-lib/aws-rds';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 
 export interface RDSStackProps extends StackProps {
-    vpc: Vpc
+    vpc: ec2.Vpc
 }
 
 export class RDSStack extends Stack {
 
-    readonly dbSecret: DatabaseSecret;
-    readonly postgresRDSserverless: ServerlessCluster;
+    readonly dbSecret: rds.DatabaseSecret;
+    readonly postgresRDSserverless: rds.ServerlessCluster;
 
     constructor(scope: App, id: string, props: RDSStackProps) {
         super(scope, id, props);
 
         const dbUser = this.node.tryGetContext("dbUser");
         const dbName = this.node.tryGetContext("dbName");
-        const dbPort = this.node.tryGetContext("dbPort");
+        const dbPort = this.node.tryGetContext("dbPort") || 5432;
 
-        this.dbSecret = new Secret(this, 'dbCredentialsSecret', {
-            secretName: "serverless-credentials",
+        this.dbSecret = new secretsmanager.Secret(this, 'dbCredentialsSecret', {
+            secretName: "ecsworkshop/test/todo-app/aurora-pg",
             generateSecretString: {
                 secretStringTemplate: JSON.stringify({
                     username: dbUser,
@@ -158,68 +150,41 @@ export class RDSStack extends Stack {
             }
         });
 
-        this.postgresRDSserverless = new ServerlessCluster(this, 'postgresRdsServerless', {
-            engine: DatabaseClusterEngine.AURORA_POSTGRESQL,
-            parameterGroup: ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
+        this.postgresRDSserverless = new rds.ServerlessCluster(this, 'postgresRdsServerless', {
+            engine: rds.DatabaseClusterEngine.AURORA_POSTGRESQL,
+            parameterGroup: rds.ParameterGroup.fromParameterGroupName(this, 'ParameterGroup', 'default.aurora-postgresql10'),
             vpc: props.vpc,
             enableDataApi: true,
-            vpcSubnets: { subnetType: SubnetType.PRIVATE },
-            credentials: Credentials.fromSecret(this.dbSecret, dbUser),
+            vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
+            credentials: rds.Credentials.fromSecret(this.dbSecret, dbUser),
             scaling: {
                 autoPause: Duration.minutes(10), // default is to pause after 5 minutes of idle time
-                minCapacity: AuroraCapacityUnit.ACU_8, // default is 2 Aurora capacity units (ACUs)
-                maxCapacity: AuroraCapacityUnit.ACU_32, // default is 16 Aurora capacity units (ACUs)
+                minCapacity: rds.AuroraCapacityUnit.ACU_8, // default is 2 Aurora capacity units (ACUs)
+                maxCapacity: rds.AuroraCapacityUnit.ACU_32, // default is 16 Aurora capacity units (ACUs)
             },
             defaultDatabaseName: dbName,
             deletionProtection: false,
             removalPolicy: RemovalPolicy.DESTROY
         });
 
-        this.postgresRDSserverless.connections.allowFromAnyIpv4(Port.tcp(dbPort));
-    }
-}
+        this.postgresRDSserverless.connections.allowFromAnyIpv4(ec2.Port.tcp(dbPort));
 
-```
-
-Here, another Cloudformation Stack is setup containing the template to build an RDS Aurora Serverless Postgres Cluster.
-
-The credentials to use with RDS are created with the following code:
-
-```ts
-        this.dbSecret = new Secret(this, 'dbCredentialsSecret', {
-            secretName: `ecsworkshop/test/todo-app/aurora-pg`,
-            generateSecretString: {
-                secretStringTemplate: JSON.stringify({
-                    username: dbUser,
-                }),
-                excludePunctuation: true,
-                includeSpace: false,
-                generateStringKey: 'password'
-            }
-        });
-```
-
-In this example, a new randomized secret password for the RDS database is created and stored along with all the other parameters needed to connect to the database.   This is all done automatically through Secrets Manager integration with RDS.   When run, the stored credentials within Secrets Manager will look like this:
-
-![Secrets Manager Detail](/images/secrets-manager-detail.png)
-
-The stored credentials are passed to the DB along with the other context parameters.
-
-A key feature in AWS Secrets Manager is the ability to rotate credentials automatically as a security best practice. In order to setup a new credentials rotation, a block is added in the constructor of `lib/rds-stack.ts`.
-
-```ts
-        new SecretRotation(
+        new secretsmanager.SecretRotation(
             this,
-            secretName: `ecsworkshop/test/todo-app/aurora-pg`,
+            `ecsworkshop/test/todo-app/aurora-pg`,
             {
                 secret: this.dbSecret,
-                application: SecretRotationApplication.POSTGRES_ROTATION_SINGLE_USER,
+                application: secretsmanager.SecretRotationApplication.POSTGRES_ROTATION_SINGLE_USER,
                 vpc: props.vpc,
-                vpcSubnets: { subnetType: SubnetType.PRIVATE },
+                vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
                 target: this.postgresRDSserverless,
                 automaticallyAfter: Duration.days(30),
             }
         );
+
+        new CfnOutput(this, 'SecretName', { value: this.dbSecret.secretName });
+    }
+}
 ```
 
 Every 30 days, the secret will be rotated and will automatically configure a Lambda function to trigger the rotation using the `single user` method.  More information on the lambdas and methods for credential rotation can be found [here](https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_available-rotation-templates.html)
@@ -235,14 +200,15 @@ The ECS Fargate cluster application is created here using the `ecs-patterns` lib
 The stored credentials created in the RDS Stack are read from Secrets Manager and passed to our container task definition via the `secrets` property.  The secrets unique ARN is passed into this stack as a parameter `dbSecretArn`.
 
 ```ts
-import { App, Stack, StackProps } from '@aws-cdk/core';
-import { Vpc } from "@aws-cdk/aws-ec2";
-import { Cluster, ContainerImage, Secret as ECSSecret } from "@aws-cdk/aws-ecs";
-import { ApplicationLoadBalancedFargateService } from '@aws-cdk/aws-ecs-patterns';
-import { Secret } from '@aws-cdk/aws-secretsmanager';
+import { App, Stack, StackProps, CfnOutput } from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as ecs from 'aws-cdk-lib/aws-ecs';
+import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+
 
 export interface ECSStackProps extends StackProps {
-  vpc: Vpc
+  vpc: ec2.Vpc
   dbSecretArn: string
 }
 
@@ -253,28 +219,31 @@ export class ECSStack extends Stack {
 
     const containerPort = this.node.tryGetContext("containerPort");
     const containerImage = this.node.tryGetContext("containerImage");
-    const creds = Secret.fromSecretCompleteArn(this, 'postgresCreds', props.dbSecretArn);
+    const creds = secretsmanager.Secret.fromSecretCompleteArn(this, 'postgresCreds', props.dbSecretArn);
 
-    const cluster = new Cluster(this, 'Cluster', {
+    const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: props.vpc,
       clusterName: 'fargateClusterDemo'
     });
 
-    const fargateService = new ApplicationLoadBalancedFargateService(this, "fargateService", {
+    const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, "fargateService", {
       cluster,
       taskImageOptions: {
-        image: ContainerImage.fromRegistry(containerImage),
+        image: ecs.ContainerImage.fromRegistry(containerImage),
         containerPort: containerPort,
         enableLogging: true,
         secrets: {
-          POSTGRES_DATA: ECSSecret.fromSecretsManager(creds)
+          POSTGRES_DATA: ecs.Secret.fromSecretsManager(creds)
         }
       },
       desiredCount: 1,
       publicLoadBalancer: true,
       serviceName: 'fargateServiceDemo'
     });
+
+    new CfnOutput(this, 'LoadBalancerDNS', { value: fargateService.loadBalancer.loadBalancerDnsName });
   }
+
 }
 ```
 
@@ -284,7 +253,7 @@ export class ECSStack extends Stack {
 Finally, the stacks and the CDK infrastructure application itself are created in `bin/secret-ecs-app.ts`, the entry point for the cdk defined in the `cdk.json` mentioned earlier.
 
 ```ts
-import { App } from '@aws-cdk/core';
+import { App } from 'aws-cdk-lib';
 import { VPCStack } from '../lib/vpc-stack';
 import { RDSStack } from '../lib/rds-stack';
 import { ECSStack } from '../lib/ecs-fargate-stack';
