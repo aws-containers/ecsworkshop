@@ -20,9 +20,6 @@ sudo yum -y install jq nodejs python36
 curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm" -o "session-manager-plugin.rpm"
 sudo yum install -y session-manager-plugin.rpm
 
-# Install aws-cdk
-npm install -g --force aws-cdk@1.106.1
-
 # Setting environment variables required to communicate with AWS API's via the cli tools
 echo "export AWS_DEFAULT_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
 echo "export AWS_REGION=\$AWS_DEFAULT_REGION" >> ~/.bashrc
@@ -39,8 +36,6 @@ cat << EOF > ~/.aws/config
 [default]
 region = ${AWS_DEFAULT_REGION}
 output = json
-role_arn = $(aws iam get-role --role-name ecsworkshop-admin | jq -r .Role.Arn)
-credential_source = Ec2InstanceMetadata
 EOF
 
 ```
