@@ -9,7 +9,13 @@ hidden: true
 ```bash
 cd ~/environment/ecsworkshop-efsdemo/ecsworkshop
 ```
- 
+
+#### Install requirements
+
+```bash
+pip install -r requirements.txt
+```
+
 #### Code Review
 
 Similar to how we deployed in all of the other environments, we follow the same format here by using the AWS CDK. The only difference is that we will deploy the ECS task definition and service using the AWS CLI. 
