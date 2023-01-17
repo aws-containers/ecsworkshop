@@ -58,7 +58,7 @@ Lastly, we are managing instance count and scaling through an Autoscaling group.
 user_data = ec2.UserData.custom(f"""#!/usr/bin/env bash
 
 # Pulling down the code and creating necessary folders/user
-wget https://gist.githubusercontent.com/adamjkeller/cb2dfcd2ad6c6dc74d02c83759f2a1c5/raw/93b65f6b11d07574667d636678e7716b805a8097/setup.sh
+wget https://raw.githubusercontent.com/aws-containers/ecsdemo-migration-to-ecs/main/setup.sh
 bash -x ./setup.sh
 
 # Create systemd unit
