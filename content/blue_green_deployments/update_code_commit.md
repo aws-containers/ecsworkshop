@@ -4,7 +4,8 @@ chapter = false
 weight = 5
 +++
 
-#### Edit the `index.html` to change the `background-color` to `green`
+#### Make changes to the website
+Edit the `index.html` to change the `background-color` to `green`
 
 ```bash
 cd ~/environment/nginx-sample/
