@@ -52,6 +52,12 @@ Like our previous services, we are using the CDK to deploy. Let's go ahead and d
 
 #### Deploy 
 
+Install the needed dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
 Review what changes are being proposed:
 
 ```bash
