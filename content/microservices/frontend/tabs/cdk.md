@@ -41,36 +41,36 @@ As we mentioned in the platform build, we are defining our deployment configurat
 Because we built the platform in its own stack, there are certain environmental values that we will need to reuse amongst all services being deployed. In this custom construct, we are importing the VPC, ECS Cluster, and Cloud Map namespace from the base platform stack. By wrapping these into a custom construct, we are isolating the platform imports from our service deployment logic.
 
 ```python
-class BasePlatform(core.Construct):
-
-    def __init__(self, scope: core.Construct, id: str, **kwargs):
+class BasePlatform(Construct):
+    
+    def __init__(self, scope: Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
-        self.environment_name = 'ecsworkshop'
+        environment_name = 'ecsworkshop'
 
         # The base platform stack is where the VPC was created, so all we need is the name to do a lookup and import it into this stack for use
-        self.vpc = aws_ec2.Vpc.from_lookup(
+        self.vpc = ec2.Vpc.from_lookup(
             self, "VPC",
-            vpc_name='{}-base/BaseVPC'.format(self.environment_name)
+            vpc_name='{}-base/BaseVPC'.format(environment_name)
         )
 
-        self.sd_namespace = aws_servicediscovery.PrivateDnsNamespace.from_private_dns_namespace_attributes(
+        self.sd_namespace = servicediscovery.PrivateDnsNamespace.from_private_dns_namespace_attributes(
             self, "SDNamespace",
-            namespace_name=core.Fn.import_value('NSNAME'),
-            namespace_arn=core.Fn.import_value('NSARN'),
-            namespace_id=core.Fn.import_value('NSID')
+            namespace_name=cdk.Fn.import_value('NSNAME'),
+            namespace_arn=cdk.Fn.import_value('NSARN'),
+            namespace_id=cdk.Fn.import_value('NSID')
         )
 
-        self.ecs_cluster = aws_ecs.Cluster.from_cluster_attributes(
+        self.ecs_cluster = ecs.Cluster.from_cluster_attributes(
             self, "ECSCluster",
-            cluster_name=core.Fn.import_value('ECSClusterName'),
+            cluster_name=cdk.Fn.import_value('ECSClusterName'),
             security_groups=[],
             vpc=self.vpc,
             default_cloud_map_namespace=self.sd_namespace
         )
-
-        self.services_sec_grp = aws_ec2.SecurityGroup.from_security_group_id(
+        
+        self.services_sec_grp = ec2.SecurityGroup.from_security_group_id(
             self, "ServicesSecGrp",
-            security_group_id=core.Fn.import_value('ServicesSecGrp')
+            security_group_id=cdk.Fn.import_value('ServicesSecGrp')
         )
 ```
 
@@ -79,39 +79,43 @@ class BasePlatform(core.Construct):
 For the frontend service, there are quite a few components that have to be built to serve it up as a frontend service. Those components are an Application Load Balancer, Target Group, ECS Task Definition, and an ECS Service. To build these components on our own would equate to hundreds of lines of CloudFormation, whereas with the higher level constructs that the cdk provides, we are able to build everything with 18 lines of code.
 
 ```python
-class FrontendService(core.Stack):
-
-    def __init__(self, scope: core.Stack, id: str, **kwargs):
+class FrontendService(Stack):
+    
+    def __init__(self, scope: Stack, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
-        self.base_platform = BasePlatform(self, self.stack_name)
+#        base_platform = BasePlatform(self, stack_name) 
+        self.base_platform = BasePlatform(self, "BasePlatform") 
 
-        # This defines some of the components required for the docker container to run
-        self.fargate_task_image = aws_ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-            image=aws_ecs.ContainerImage.from_registry("public.ecr.aws/aws-containers/ecsdemo-frontend"),
+        self.fargate_task_image = ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
+            image=ecs.ContainerImage.from_registry("public.ecr.aws/aws-containers/ecsdemo-frontend"),
             container_port=3000,
             environment={
-                "CRYSTAL_URL": "http://ecsdemo-crystal.service:3000/crystal",
-                "NODEJS_URL": "http://ecsdemo-nodejs.service:3000"
+                "CRYSTAL_URL": "http://ecsdemo-crystal.service.local:3000/crystal",
+                "NODEJS_URL": "http://ecsdemo-nodejs.service.local:3000",
+                "REGION": os.getenv('AWS_DEFAULT_REGION')
             },
         )
 
         # This high level construct will build everything required to ensure our container is load balanced and running as an ECS service
-        self.fargate_load_balanced_service = aws_ecs_patterns.ApplicationLoadBalancedFargateService(
+        self.fargate_load_balanced_service = ecs_patterns.ApplicationLoadBalancedFargateService(
             self, "FrontendFargateLBService",
+            service_name='ecsdemo-frontend',
             cluster=self.base_platform.ecs_cluster,
             cpu=256,
             memory_limit_mib=512,
             desired_count=1,
             public_load_balancer=True,
-            cloud_map_options=self.base_platform.sd_namespace,
+            cloud_map_options=ecs.CloudMapOptions(
+                cloud_map_namespace=self.base_platform.sd_namespace
+                ),
             task_image_options=self.fargate_task_image
         )
 
         # Utilizing the connections method to connect the frontend service security group to the backend security group
         self.fargate_load_balanced_service.service.connections.allow_to(
             self.base_platform.services_sec_grp,
-            port_range=aws_ec2.Port(protocol=aws_ec2.Protocol.TCP, string_representation="frontendtobackend", from_port=3000, to_port=3000)
+            port_range=ec2.Port(protocol=ec2.Protocol.TCP, string_representation="frontendtobackend", from_port=3000, to_port=3000)
         )
 ```
 
@@ -155,17 +159,20 @@ awslogs get -G -S --timestamp --start 1m --watch $log_group
 - To manually scale the service up, we simply will modify the code in `app.py` and change the desired count from 1 to 3
 
 ```python
-self.fargate_load_balanced_service = aws_ecs_patterns.ApplicationLoadBalancedFargateService(
-    self, "FrontendFargateLBService",
-    cluster=self.base_platform.ecs_cluster,
-    cpu=256,
-    memory_limit_mib=512,
-    desired_count=3,
-    #desired_count=1,
-    public_load_balancer=True,
-    cloud_map_options=self.base_platform.sd_namespace,
-    task_image_options=self.fargate_task_image
-)
+        self.fargate_load_balanced_service = ecs_patterns.ApplicationLoadBalancedFargateService(
+            self, "FrontendFargateLBService",
+            service_name='ecsdemo-frontend',
+            cluster=self.base_platform.ecs_cluster,
+            cpu=256,
+            memory_limit_mib=512,
+            desired_count=3,
+            #desired_count=1,
+            public_load_balancer=True,
+            cloud_map_options=ecs.CloudMapOptions(
+                cloud_map_namespace=self.base_platform.sd_namespace
+                ),
+            task_image_options=self.fargate_task_image
+        )
 ```
 
 - Once you have updated the code, let's validate that the changes will take effect.
@@ -210,16 +217,17 @@ cdk deploy
 
 ```python
 # Enable Service Autoscaling
-self.autoscale = self.fargate_load_balanced_service.service.auto_scale_task_count(
-    min_capacity=1,
-    max_capacity=10
+self.autoscale = fargate_load_balanced_service.service.auto_scale_task_count(
+   min_capacity=1,
+   max_capacity=10
 )
+
 
 self.autoscale.scale_on_cpu_utilization(
     "CPUAutoscaling",
     target_utilization_percent=50,
-    scale_in_cooldown=core.Duration.seconds(30),
-    scale_out_cooldown=core.Duration.seconds(30)
+    scale_in_cooldown=Duration.seconds(30),
+    scale_out_cooldown=Duration.seconds(30)
 )
 ```
 
@@ -229,7 +237,7 @@ self.autoscale.scale_on_cpu_utilization(
 
 ```python
 # Enable Service Autoscaling
-self.autoscale = self.fargate_load_balanced_service.service.auto_scale_task_count(
+self.autoscale = fargate_load_balanced_service.service.auto_scale_task_count(
     min_capacity=1,
     max_capacity=10
 )
@@ -241,8 +249,8 @@ self.autoscale = self.fargate_load_balanced_service.service.auto_scale_task_coun
 self.autoscale.scale_on_cpu_utilization(
     "CPUAutoscaling",
     target_utilization_percent=50,
-    scale_in_cooldown=core.Duration.seconds(30),
-    scale_out_cooldown=core.Duration.seconds(30)
+    scale_in_cooldown=Duration.seconds(30),
+    scale_out_cooldown=Duration.seconds(30)
 )
 ```
 
