@@ -37,29 +37,29 @@ As we mentioned in the platform build, we are defining our deployment configurat
 Because we built the platform in its own stack, there are certain environmental values that we will need to reuse amongst all services being deployed. In this custom construct, we are importing the VPC, ECS Cluster, and Cloud Map namespace from the base platform stack. By wrapping these into a custom construct, we are isolating the platform imports from our service deployment logic.
 
 ```python
-class BasePlatform(core.Construct):
-
-    def __init__(self, scope: core.Construct, id: str, **kwargs):
+class BasePlatform(Construct):
+    
+    def __init__(self, scope: Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
+        self.environment_name = 'ecsworkshop'
 
         # The base platform stack is where the VPC was created, so all we need is the name to do a lookup and import it into this stack for use
         self.vpc = aws_ec2.Vpc.from_lookup(
-            self, "ECSWorkshopVPC",
-            vpc_name='ecsworkshop-base/BaseVPC'
+            self, "VPC",
+            vpc_name='{}-base/BaseVPC'.format(self.environment_name)
         )
-
-        # Importing the service discovery namespace from the base platform stack
+        
         self.sd_namespace = aws_servicediscovery.PrivateDnsNamespace.from_private_dns_namespace_attributes(
             self, "SDNamespace",
-            namespace_name=core.Fn.import_value('NSNAME'),
-            namespace_arn=core.Fn.import_value('NSARN'),
-            namespace_id=core.Fn.import_value('NSID')
+            namespace_name=cdk.Fn.import_value('NSNAME'),
+            namespace_arn=cdk.Fn.import_value('NSARN'),
+            namespace_id=cdk.Fn.import_value('NSID')
         )
 
         # Importing the ECS cluster from the base platform stack
         self.ecs_cluster = aws_ecs.Cluster.from_cluster_attributes(
             self, "ECSCluster",
-            cluster_name=core.Fn.import_value('ECSClusterName'),
+            cluster_name=cdk.Fn.import_value('ECSClusterName'),
             security_groups=[],
             vpc=self.vpc,
             default_cloud_map_namespace=self.sd_namespace
@@ -68,7 +68,7 @@ class BasePlatform(core.Construct):
         # Importing the security group that allows frontend to communicate with backend services
         self.services_sec_grp = aws_ec2.SecurityGroup.from_security_group_id(
             self, "ServicesSecGrp",
-            security_group_id=core.Fn.import_value('ServicesSecGrp')
+            security_group_id=cdk.Fn.import_value('ServicesSecGrp')
         )
 ```
 
@@ -77,30 +77,33 @@ class BasePlatform(core.Construct):
 For the backend service, we simply want to run a container from a docker image, but still need to figure out how to deploy it and get it behind a scheduler. To do this on our own, we would need to build a task definition, ECS service, and figure out how to get it behind CloudMap for service discovery. To build these components on our own would equate to hundreds of lines of CloudFormation, whereas with the higher level constructs that the cdk provides, we are able to build everything with 30 lines of code.
 
 ```python
-class CrystalService(core.Stack):
-
-    def __init__(self, scope: core.Stack, id: str, **kwargs):
+class CrystalService(Stack):
+    
+    def __init__(self, scope: Stack, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
-        # Importing our shared values from the base stack construct
         self.base_platform = BasePlatform(self, self.stack_name)
 
-        # The task definition is where we store details about the task that will be scheduled by the service
         self.fargate_task_def = aws_ecs.TaskDefinition(
             self, "TaskDef",
             compatibility=aws_ecs.Compatibility.EC2_AND_FARGATE,
             cpu='256',
-            memory_mib='512',
+            memory_mib='512'
         )
 
         # The container definition defines the container(s) to be run when the task is instantiated
         self.container = self.fargate_task_def.add_container(
             "CrystalServiceContainerDef",
             image=aws_ecs.ContainerImage.from_registry("public.ecr.aws/aws-containers/ecsdemo-crystal"),
-            memory_reservation_mib=512,
+            memory_reservation_mib=128,
             logging=aws_ecs.LogDriver.aws_logs(
-                stream_prefix='ecsworkshop-crystal'
-            )
+                stream_prefix='/crystal-container',
+                log_group=self.logGroup
+            ),
+            environment={
+                "REGION": getenv('AWS_DEFAULT_REGION')
+            },
+            container_name="crystal-app"
         )
 
         # Serve this container on port 3000
@@ -113,9 +116,10 @@ class CrystalService(core.Stack):
         # Build the service definition to schedule the container in the shared cluster
         self.fargate_service = aws_ecs.FargateService(
             self, "CrystalFargateService",
+            service_name='ecsdemo-crystal',
             task_definition=self.fargate_task_def,
             cluster=self.base_platform.ecs_cluster,
-            security_group=self.base_platform.services_sec_grp,
+            security_groups=[self.base_platform.services_sec_grp],
             desired_count=1,
             cloud_map_options=aws_ecs.CloudMapOptions(
                 cloud_map_namespace=self.base_platform.sd_namespace,
@@ -166,11 +170,12 @@ awslogs get -G -S --timestamp --start 1m --watch $log_group
 ```python
 self.fargate_service = aws_ecs.FargateService(
     self, "CrystalFargateService",
+    service_name='ecsdemo-crystal',
     task_definition=self.fargate_task_def,
     cluster=self.base_platform.ecs_cluster,
-    security_group=self.base_platform.services_sec_grp,
-    desired_count=3,
+    security_groups=[self.base_platform.services_sec_grp],
     #desired_count=1,
+    desired_count=3,
     cloud_map_options=aws_ecs.CloudMapOptions(
         cloud_map_namespace=self.base_platform.sd_namespace,
         name='ecsdemo-crystal'
@@ -221,7 +226,7 @@ cdk deploy
 ```python
 # Enable Service Autoscaling
 self.autoscale = self.fargate_service.auto_scale_task_count(
-    min_capacity=1,
+    min_capacity=3,
     max_capacity=10
 )
 
@@ -229,10 +234,9 @@ self.autoscale = self.fargate_service.auto_scale_task_count(
 self.autoscale.scale_on_cpu_utilization(
     "CPUAutoscaling",
     target_utilization_percent=20,
-    scale_in_cooldown=core.Duration.seconds(30),
-    scale_out_cooldown=core.Duration.seconds(30)
+    scale_in_cooldown=Duration.seconds(30),
+    scale_out_cooldown=Duration.seconds(30)
 )
-
 ```
 
 #### Code Review
@@ -242,7 +246,7 @@ self.autoscale.scale_on_cpu_utilization(
 ```python
 # Enable Service Autoscaling
 self.autoscale = self.fargate_service.auto_scale_task_count(
-    min_capacity=1,
+    min_capacity=3,
     max_capacity=10
 )
 ```
@@ -254,8 +258,8 @@ self.autoscale = self.fargate_service.auto_scale_task_count(
 self.autoscale.scale_on_cpu_utilization(
     "CPUAutoscaling",
     target_utilization_percent=20,
-    scale_in_cooldown=core.Duration.seconds(30),
-    scale_out_cooldown=core.Duration.seconds(30)
+    scale_in_cooldown=Duration.seconds(30),
+    scale_out_cooldown=Duration.seconds(30)
 )
 ```
 
