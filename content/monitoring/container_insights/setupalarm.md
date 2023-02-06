@@ -20,7 +20,7 @@ In the **Specify metric conditions** screen, leave everything as default and ent
 
 ![Cluster Dashboard](/images/ContainerInsights20.png)
 
-In the **Configure actions** screen, select **Create new topic** option and enter an email id to which you want the alarm notifications to be sent. Select **Next**
+In the **Configure actions** screen, select **Create new topic** option and enter an email id to which you want the alarm notifications to be sent. Select **Create topic**. Select **Next**
 
 ![Cluster Dashboard](/images/ContainerInsights21.png)
 

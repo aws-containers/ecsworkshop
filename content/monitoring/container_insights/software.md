@@ -11,17 +11,14 @@ In the Cloud9 workspace, run the following commands:
 ```
 # Install prerequisite packages
 sudo yum -y install jq gettext
-
-# Install aws-cdk
-npm install --force -g aws-cdk@2.25.0
 ```
-jq is a tool that can be used to extract and transform data held in JSON files.
+`jq` is a tool that can be used to extract and transform data held in JSON files.
 
-The gettext package includes the envsubst utility, which can be used to substitute the values of environment variables into an input stream.
+The `gettext` package includes the `envsubst` utility, which can be used to substitute the values of environment variables into an input stream.
 
-We will use these tools, along with the Linux utiltity sed, to insert or replace attribute values in various files throughout the workshop. This avoids the need for manual text editing wherever possible.
+We will use these tools, along with the Linux utility `sed`, to insert or replace attribute values in various files throughout the workshop. This avoids the need for manual text editing wherever possible.
 
-```
+```bash
 # Setting environment variables required to communicate with AWS API's via the cli tools
 echo "export AWS_DEFAULT_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
 echo "export AWS_REGION=\$AWS_DEFAULT_REGION" >> ~/.bashrc

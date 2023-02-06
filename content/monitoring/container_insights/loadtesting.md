@@ -18,7 +18,3 @@ Verify Siege is working by typing the below into your terminal window.
 ```
 siege --version
 ```
-
-![Cluster Dashboard](/images/ContainerInsights14.png)
-
-

@@ -34,4 +34,4 @@ Use AWS Distro for OpenTelemetry to instrument your applications running on Amaz
 
 To learn more about AWS Observability Services and tools please check
 
-{{% button href="https://observability.workshop.aws" icon="fab fa-leanpub" icon="fab fa-leanpub" icon-position="right"  %}}AWS Observability Workshop{{% /button %}}
+{{% button href="https://catalog.workshops.aws/observability/en-US" icon="fab fa-leanpub" icon="fab fa-leanpub" icon-position="right"  %}}AWS Observability Workshop{{% /button %}}

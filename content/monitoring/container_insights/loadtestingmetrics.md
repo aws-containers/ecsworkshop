@@ -7,9 +7,7 @@ Navigate to the Container Insights home page and select the time range to **15 m
 
 ![Cluster Dashboard](/images/ContainerInsights17.png)
 
-You can see that the metrics are starting to show up on the graph widgets in the screenshots below. In particular, notice the CPU Utilization increasing as Siege increases load on the application.
-
-![Cluster Dashboard](/images/ContainerInsights13.png)
+You can see that the metrics are starting to show up on the graph widgets in the screenshots below. In particular, notice the CPU Utilization increasing as Siege increases load on the frontend application.
 
 ![Cluster Dashboard](/images/ContainerInsights16.png)
 

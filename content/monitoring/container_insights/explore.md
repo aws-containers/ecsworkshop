@@ -12,11 +12,11 @@ Navigate to [CloudWatch Logs](https://console.aws.amazon.com/cloudwatch/home#log
 
 #### Explore CloudWatch Container Insights
 
-Navigate to [Amazon CloudWatch home page](https://console.aws.amazon.com/cloudwatch/home#cw:dashboard=Home). Select Container Insights from the drop down on the home page as shown below
+Navigate to [Amazon CloudWatch home page](https://console.aws.amazon.com/cloudwatch/home#cw:dashboard=Home). Select **Insights** from the left drop down on the home page as shown below
 
 ![Open Container Insights Dashboard](/images/ContainerInsights1.png)
 
-Select **ECS Clusters** in the first dropdown and select the ECS cluster you created in the second dropdown. You will be able to see several built-in charts showing various cluster level metrics such as CPU Utilization, Memory Utilization, Network and other information in the default dashboard as shown below
+Select the **container-demo** cluster in tge resourcesin the first dropdown and select the ECS cluster you created in the second dropdown. You will be able to see several built-in charts showing various cluster level metrics such as CPU Utilization, Memory Utilization, Network and other information in the default dashboard as shown below
 ![Cluster Dashboard](/images/ContainerInsights2.png)
 
 You can also view Performance Logs by simply selecting the cluster name and clicking on Actions dropdown as shown below
@@ -36,8 +36,5 @@ Select **ECS Tasks** in the first dropdown and select the ECS cluster you create
 
 Scroll down to see all the Containers that are part of the Tasks in the Service. You can select any Container in the list and click the **Action** dropdown to see Container specific Application logs, X-Ray traces and Performance logs.
 ![Cluster Dashboard](/images/ContainerInsights7.png)
-
-Because we installed Instance level insights as well, you will be able to see insights at the Instance level by selecting **ECS Instances** on the first drop down
-![Cluster Dashboard](/images/ContainerInsights12.png)
 
 #### We can now continue with load testing the cluster to see how these metrics can look under load.
