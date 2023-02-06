@@ -30,8 +30,8 @@ Now go ahead and create a new AWS SSO user that we will use to provide access to
 
 #### Create AMG workspace
 
-Go to the [AMG console](https://console.aws.amazon.com/grafana/home) and provide a workspace name as shown below
-![Create AMG workspace](/images/amg1.png)
+Go to the [AMG console](https://console.aws.amazon.com/grafana/home), click on **Create workspace** and provide a workspace name as shown below
+![Create AMG workspace](/images/amg1.png), click `Next`.
 
 Choose `Service managed` in the `Configure Settings` page and click `Next`. Choosing this option will allow the wizard to automatically provision the permissions for you based on the AWS services we will choose later on.
 

@@ -61,17 +61,13 @@ class AmpService(cdk.Stack):
     def __init__(self, scope: cdk.Stack, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
-        # This construct builds Amazon VPC
         self.vpc = ec2.Vpc(self, "VPC")
 
-        # This construct creates Amazon ECS cluster in previously built Amazon VPC
         self.ecs_cluster = ecs.Cluster(self, "DemoCluster", vpc=self.vpc)
 
-        # Reading ADOT Collector configuration file
         with open("ecs-fargate-adot-config.yaml", 'r') as f:
             adot_config = f.read()
 
-        # Amazon ECS Fargate Task Definition
         self.fargate_task_def = ecs.TaskDefinition(
             self, "aws-otel-FargateTask",
             compatibility=ecs.Compatibility.EC2_AND_FARGATE,
@@ -79,7 +75,6 @@ class AmpService(cdk.Stack):
             memory_mib='1024'
         )
 
-        # Creating Amazon CloudWatch Log groups and setting them to be deleted upon stack removal
         self.adot_log_grp = logs.LogGroup(
             self, "AdotLogGroup",
             removal_policy=cdk.RemovalPolicy.DESTROY
@@ -89,7 +84,7 @@ class AmpService(cdk.Stack):
             self, "AppLogGroup",
             removal_policy=cdk.RemovalPolicy.DESTROY
         )
-        # ADOT Collector container configuration. Here we pull container image from Public Amazon ECR repository
+
         self.otel_container = self.fargate_task_def.add_container(
             "aws-otel-collector",
             image=ecs.ContainerImage.from_registry("public.ecr.aws/aws-observability/aws-otel-collector:latest"),
@@ -103,7 +98,7 @@ class AmpService(cdk.Stack):
                 "AOT_CONFIG_CONTENT": adot_config
             },
         )
-        # Sample Prometheus metric emitter container configuration. Here we build image from Docker file and push it to Amazon ECR repository
+
         self.prom_container = self.fargate_task_def.add_container(
             "prometheus-sample-app",
             image=ecs.ContainerImage.from_docker_image_asset(
@@ -121,7 +116,7 @@ class AmpService(cdk.Stack):
                 "REGION": getenv('AWS_REGION')
             },
         )
-        # Amazon ECS Service Definition
+
         self.fargate_service = ecs.FargateService(
             self, "AmpFargateService",
             service_name='aws-otel-FargateService',
@@ -129,7 +124,7 @@ class AmpService(cdk.Stack):
             cluster=self.ecs_cluster,
             desired_count=1,
         )
-        # Here we add required IAM permissions for Amazon ECS Task Role
+
         self.fargate_task_def.add_to_task_role_policy(
             iam.PolicyStatement(
                 actions=[
