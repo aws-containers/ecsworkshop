@@ -4,10 +4,11 @@ disableToc: true
 hidden: true
 ---
 
-#### Navigate to the platform repo
+#### Navigate to the platform repo and install requirements
 
 ```bash
 cd ~/environment/ecsdemo-platform/cdk
+pip install -r requirements.txt --user
 ```
 
 #### Confirm that the cdk can synthesize the assembly CloudFormation templates

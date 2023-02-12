@@ -4,10 +4,11 @@ disableToc: true
 hidden: true
 ---
 
-## Validate deployment configuration
+#### Navigate to the nodejs repo and install requirements
 
 ```bash
 cd ~/environment/ecsdemo-nodejs/cdk
+pip install -r requirements.txt --user
 ```
 
 #### Confirm that the cdk can synthesize the assembly CloudFormation templates

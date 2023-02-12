@@ -11,10 +11,11 @@ pip3 install --user awslogs
 sudo yum install -y siege
 ```
 
-## Validate deployment configuration
+#### Navigate to the frontend repo and install requirements
 
 ```bash
 cd ~/environment/ecsdemo-frontend/cdk
+pip install -r requirements.txt --user
 ```
 
 #### Confirm that the cdk can synthesize the assembly CloudFormation templates
