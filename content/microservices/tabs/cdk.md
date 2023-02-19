@@ -6,35 +6,28 @@ hidden: true
 
 ### Install and setup prerequisites
 
-```
+```bash
 # Install prerequisite packages
-sudo yum -y install jq nodejs python36 siege
-
-# Install ecs cli for local testing
-sudo curl -so /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
-sudo chmod +x /usr/local/bin/ecs-cli
-
-# Setting CDK Version
-export AWS_CDK_VERSION="1.122.0"
-
-# Install aws-cdk
-npm install -g --force aws-cdk@$AWS_CDK_VERSION
+sudo yum -y install jq nodejs siege
 
 # Install cdk packages
-pip3 install --user --upgrade aws-cdk.core==$AWS_CDK_VERSION \
-aws-cdk.aws_ecs_patterns==$AWS_CDK_VERSION \
-aws-cdk.aws_ec2==$AWS_CDK_VERSION \
-aws-cdk.aws_ecs==$AWS_CDK_VERSION \
-aws-cdk.aws_servicediscovery==$AWS_CDK_VERSION \
-aws_cdk.aws_iam==$AWS_CDK_VERSION \
-aws_cdk.aws_efs==$AWS_CDK_VERSION \
-aws_cdk.aws_appmesh==$AWS_CDK_VERSION \
-awscli \
-awslogs
+pip3 install --user --upgrade awslogs
 
-# Setting environment variables required to communicate with AWS API's via the cli tools
-echo "export AWS_DEFAULT_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
-echo "export AWS_REGION=\$AWS_DEFAULT_REGION" >> ~/.bashrc
-echo "export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)" >> ~/.bashrc
+#  Verify environment variables required to communicate with AWS API's via the cli tools
+grep AWS_DEFAULT_REGION ~/.bashrc 
+if [ $? -ne 0 ]; then
+    echo "export AWS_DEFAULT_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
+fi
+
+grep AWS_REGION ~/.bashrc 
+if [ $? -ne 0 ]; then
+    echo "export AWS_REGION=\$AWS_DEFAULT_REGION" >> ~/.bashrc
+fi
+
+grep AWS_ACCOUNT_ID ~/.bashrc 
+if [ $? -ne 0 ]; then
+    echo "export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)" >> ~/.bashrc
+fi 
+
 source ~/.bashrc
 ```
