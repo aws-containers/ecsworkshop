@@ -9,6 +9,7 @@ hidden: true
 ```bash
 cd ~/environment/ecsdemo-platform/cdk
 pip install -r requirements.txt --user
+cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_DEFAULT_REGION
 ```
 
 #### Confirm that the cdk can synthesize the assembly CloudFormation templates
