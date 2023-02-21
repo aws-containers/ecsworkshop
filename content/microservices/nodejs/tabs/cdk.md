@@ -175,7 +175,7 @@ awslogs get -G -S --timestamp --start 1m --watch $log_group
 
 {{%expand "Expand here to see the solution" %}}
 
-- To manually scale the service up, we simply will modify the code in `app.py` and change the desired count from 1 to 3
+- To manually scale the service up, we simply will modify the code in `~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py` and change the desired count from 1 to 3
 
 ```python
         fargate_service = aws_ecs.FargateService(
@@ -228,7 +228,7 @@ cdk deploy
 
 #### Setup Autoscaling in the code
 
-- Using the editor of your choice, open '~/environment/ecsdemo-nodejs/cdk/app.py' in the cdk directory.
+- Using the editor of your choice, open `~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py` in the cdk directory.
 
 - Search for `Enable Service Autoscaling` to find the code that will enable autoscaling for the service.
 
@@ -236,17 +236,18 @@ cdk deploy
 
 ```python
 # Enable Service Autoscaling
-self.autoscale = self.fargate_service.auto_scale_task_count(
-    min_capacity=1,
+autoscale = fargate_service.auto_scale_task_count(
+    min_capacity=3,
     max_capacity=10
 )
 
-self.autoscale.scale_on_cpu_utilization(
+autoscale.scale_on_cpu_utilization(
     "CPUAutoscaling",
     target_utilization_percent=50,
-    scale_in_cooldown=core.Duration.seconds(30),
-    scale_out_cooldown=core.Duration.seconds(30)
+    scale_in_cooldown=Duration.seconds(30),
+    scale_out_cooldown=Duration.seconds(30)
 )
+self.autoscale = autoscale
 
 ```
 
