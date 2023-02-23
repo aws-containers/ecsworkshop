@@ -16,7 +16,7 @@ sudo curl -so /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs
 sudo chmod +x /usr/local/bin/ecs-cli
 
 # Setting CDK Version
-export AWS_CDK_VERSION="1.116.0"
+export AWS_CDK_VERSION="2.66.0"
 
 # Tool to open files on Cloud9 IDE directly from terminar
 npm install -g c9
