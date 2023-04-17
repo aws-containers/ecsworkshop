@@ -25,10 +25,8 @@ copilot init
 
 We will be prompted with a series of questions related to the application, environment, and the service we want to deploy. Answer the questions as follows:
 
-- Would you like to use one of your existing applications? "Y"
-- Which existing application do you want to add a new service to? Select "ecsworkshop", hit enter
-- Which service type best represents your service's architecture? Select "Backend Service", hit enter
-- What do you want to name this Backend Service: ecsdemo-nodejs
+- Which workload type best represents your architecture? Select "Backend Service", hit enter
+- What do you want to name this service? ecsdemo-nodejs
 - Dockerfile: ./Dockerfile
 
 After you answer the questions, it will begin the process of creating some baseline resources for your service.
@@ -38,10 +36,6 @@ Next, you will be prompted to deploy a test environment. An environment encompas
 This includes the networking stack (VPC, Subnets, Security Groups, etc), the ECS Cluster, Load Balancers (if required), and more.
 
 Type "y", and hit enter. Given that a test environment already exists, copilot will continue on and build the docker image, push it to ECR, and deploy the backend service.
-
-Below is an example of what the cli interaction will look like:
-
-![deployment](/images/copilot-init-nodejs.gif)
 
 That's it!
 When the deployment is complete, navigate back to the frontend URL and you should now see the backend Nodejs service in the image.
