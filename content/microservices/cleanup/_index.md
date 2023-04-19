@@ -4,7 +4,7 @@ chapter = false
 weight = 60
 +++
 
-Let's clean up our compute resources first:
+Let's clean up our compute resources. If you want to follow the subsequent sections (e.g., monitoring), you may keep them for now and go back here to clean up them after you finish the whole workshop.
 
 {{%expand "Expand here to cleanup the copilot portion of the workshop" %}}
 
