@@ -17,7 +17,7 @@ In this chapter, our goal is to edit your ECS Frontend App in order to fully ena
 The Frontend CDK code will change a bit more than previous Crystal and Nodejs files, since we need to utilize previous App Mesh configurations to reference Crystal and NodeJs Virtual Services and Virtual Nodes. 
 
 
-First, we will comment our new class `FrontendServiceMesh` and comment the previous class `FrontendService` in the file `~/environment/ecsdemo-frontend/cdk/app.py` or run this command in the terminal:
+First, we will uncomment our new class `FrontendServiceMesh` and comment the previous class `FrontendService` in the file `~/environment/ecsdemo-frontend/cdk/app.py` or run this command in the terminal:
 ```
 #Commenting previous class
 sed -i -e '/FrontendService(app, stack_name, env=_env)/s/^#*/#/' ~/environment/ecsdemo-frontend/cdk/app.py 
