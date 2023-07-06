@@ -13,15 +13,15 @@ In this chapter, our goal is to edit your ECS NodeJs App in order to have the En
 
 ### Preparing CDK Code To Deploy App Mesh Resources And ECS Configurations
 
-To enable the nodejs app configuration, please uncomment the code between the tags `#appmesh-proxy-uncomment` in the file `~/environment/ecsdemo-nodejs/cdk/app.py` or run this command in the terminal:
+To enable the nodejs app configuration, please uncomment the code between the tags `#appmesh-proxy-uncomment` in the file `~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py` or run this command in the terminal:
 ```bash
-lines=($(grep -Fn '#appmesh-proxy-uncomment' ~/environment/ecsdemo-nodejs/cdk/app.py | cut -f1 -d:))
+lines=($(grep -Fn '#appmesh-proxy-uncomment' ~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py | cut -f1 -d:))
 unstart=$((${lines[0]} + 1))
 unend=$((${lines[1]} - 1))
-sed -i "${unstart},${unend} s/# //" ~/environment/ecsdemo-nodejs/cdk/app.py 
+sed -i "${unstart},${unend} s/# //" ~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py
 ```
 
-so you can get this result in the file `ecsdemo-nodejs/cdk/app.py`
+so you can get this result in the file `ecsdemo-nodejs/cdk/cdk/nodejsservice.py`
 ```python
 self.fargate_task_def = aws_ecs.TaskDefinition(
     self, "TaskDef",
@@ -47,9 +47,9 @@ self.fargate_task_def = aws_ecs.TaskDefinition(
 The **proxy configuration** will enable the app mesh integration with ECS. for more information regarding the parameter please check out the [official documentation](https://docs.aws.amazon.com/app-mesh/latest/userguide/envoy-config.html) and [CDK Parameters](https://docs.aws.amazon.com/cdk/api/latest/python/aws_cdk.aws_ecs/AppMeshProxyConfiguration.html).
 
 
-Uncomment the function `# self.appmesh()` in the file `~/environment/ecsdemo-nodejs/cdk/app.py` or execute the following command in the terminal:
+Uncomment the function `# self.appmesh()` in the file `~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py` or execute the following command in the terminal:
 ```bash
-sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-nodejs/cdk/app.py
+sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py
 ```
 
 The `appmesh()` function will add all the required resources into the CF to configure the nodejs app to work with App Mesh. In a moment we will review the resources that were created by this function.
