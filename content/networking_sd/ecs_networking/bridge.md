@@ -70,7 +70,7 @@ Below is a diagram of the bridge mode for EC2 launch type using static port mapp
 
 ![Bridge static mode](/images/ECS_bridge_mode-static.png)
 
-When trying to run multiple tasks with static port mapping on the same EC2 instance you will get an error comparable too:
+When trying to run multiple tasks with static port mapping on the same EC2 instance you will get an error comparable to:
 
 ```
 
