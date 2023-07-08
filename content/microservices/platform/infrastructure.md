@@ -20,7 +20,7 @@ When we initialize our application, we will create our environment (which builds
 {{%expand "cdk path" %}}
 This repository will build the baseline platform for the microservices to deploy to. This includes VPC, ECS Cluster, and Cloud Map service discovery namespace. The AWS CDK will be the mechanism used to achieve this.
 
-We will be continue using the AWS CDK to deploy our applications into this cluster.
+We will continue using the AWS CDK to deploy our applications into this cluster.
 {{% /expand %}}
 
 ![mu-environment](/images/mu-topology-vpc.png)
