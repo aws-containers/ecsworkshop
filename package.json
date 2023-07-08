@@ -26,6 +26,6 @@
 		"font-awesome": "^4.7.0",
 		"hugo-bin": "0.71.1",
 		"hugo-lunr": "0.0.4",
-		"mermaid": "^8.13.8"
+		"mermaid": "^10.1.0"
 	}
 }
