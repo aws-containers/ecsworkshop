@@ -225,7 +225,7 @@ cdk deploy
 
 ```python
 # Enable Service Autoscaling
-self.autoscale = fargate_load_balanced_service.service.auto_scale_task_count(
+self.autoscale = self.fargate_load_balanced_service.service.auto_scale_task_count(
    min_capacity=1,
    max_capacity=10
 )
@@ -245,7 +245,7 @@ self.autoscale.scale_on_cpu_utilization(
 
 ```python
 # Enable Service Autoscaling
-self.autoscale = fargate_load_balanced_service.service.auto_scale_task_count(
+self.autoscale = self.fargate_load_balanced_service.service.auto_scale_task_count(
     min_capacity=1,
     max_capacity=10
 )
