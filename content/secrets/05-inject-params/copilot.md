@@ -19,11 +19,11 @@ The parameter is created with the correct copilot application name and environme
 ```
 Environment test is already on the latest version v1.4.0, skip upgrade.
 ...Put secret DEMO_PARAMETER to environment test
-✔ Successfully put secret DEMO_PARAMETER in environment test as /copilot/ecsworkshop2322/test/secrets/DEMO_PARAMETER.
+✔ Successfully put secret DEMO_PARAMETER in environment test as /copilot/ecsworkshop/test/secrets/DEMO_PARAMETER.
 You can refer to these secrets from your manifest file by editing the `secrets` section.
 test
   secrets:
-    DEMO_PARAMETER: /copilot/ecsworkshop2322/test/secrets/DEMO_PARAMETER
+    DEMO_PARAMETER: /copilot/ecsworkshop/test/secrets/DEMO_PARAMETER
 ```
 
 Next, inside of our `manifest.yml` file we add a section called called `secrets`.   Any secure parameter from SSM can be accessed via this area in the manifest.   The key is the name of the environment variable, the value is the name of the SSM parameter.  Paste the code below to append to the `manifest.yml` file.
@@ -31,7 +31,7 @@ Next, inside of our `manifest.yml` file we add a section called called `secrets`
 ```bash
 cat << EOF >> copilot/todo-app/manifest.yml
 secrets:
-    DEMO_PARAMETER: /copilot/ecsworkshop2322/test/secrets/DEMO_PARAMETER
+    DEMO_PARAMETER: /copilot/ecsworkshop/test/secrets/DEMO_PARAMETER
 EOF
 ```
 
