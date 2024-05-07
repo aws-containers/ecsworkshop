@@ -38,6 +38,18 @@ cd ~/environment/ecsdemo-frontend/cdk
 cdk synth
 ```
 
+**Steps for those who encounter an error - Part 1
+If you see an error with the above command with a version mismatch first check your CDK CLI version. 
+```bash
+cdk --version
+```
+
+**Steps for those who encounter an error - Part 2
+Update the CDK CLI to the new version once you're satisfied that you're not introducing breaking changes to your other projects (outside of this workshop) before you upgrade the CDK CLI.
+```bash
+npm install -g aws-cdk@latest
+```
+
 View proposed changes to the environment
 ```bash
 cdk diff
