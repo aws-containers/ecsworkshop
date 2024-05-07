@@ -8,7 +8,7 @@ weight: 10
 
 ### Introduction
 
-In this chapter we will learn about setting up Monitoring for the your ECS environment using Amazon Managed Service for Prometheus / Grafana and collecting metrics using AWS Distro for OpenTelemetry.
+In this chapter we will learn about setting up Monitoring for your ECS environment using Amazon Managed Service for Prometheus / Grafana and collecting metrics using AWS Distro for OpenTelemetry.
 
 #### Amazon Managed Service for Prometheus (AMP)
 
