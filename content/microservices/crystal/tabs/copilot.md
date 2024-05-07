@@ -74,7 +74,7 @@ We now can see our newly deployed service in the test environment!
 
 ## Interacting with the crystal service
 
-Let's now check the status of the frontend service.
+Let's now check the status of the crystal service.
 
 Run:
 
