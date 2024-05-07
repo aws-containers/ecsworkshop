@@ -24,7 +24,7 @@ Before proceeding to next step make sure the AWS account used for this workshop 
     aws ssm create-activation --iam-role $ROLE_NAME | tee ssm-activation.json
     ```
 
-3. Run the following command to verify the generated activatio
+3. Run the following command to verify the generated activation
 
     ```bash
     cat ssm-activation.json
