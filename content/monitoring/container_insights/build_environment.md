@@ -31,6 +31,12 @@ git clone https://github.com/aws-containers/ecsdemo-nodejs
 git clone https://github.com/aws-containers/ecsdemo-crystal
 ```
 
+#### Bootstrap the CDK environment
+
+```bash
+cdk bootstrap aws://$AWS_ACCOUNT_ID/$AWS_DEFAULT_REGION
+```
+
 #### Build the platform
 
 First, we need to build the environment for our frontend service to run. For more information on what we're building, you can review the code here: [Platform](../../../microservices/platform/build_environment).
