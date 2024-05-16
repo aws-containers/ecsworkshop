@@ -15,7 +15,7 @@ AWS Distro for OpenTelemetry Collector(AWS OTel Collector) is a AWS supported ve
 aws ecs update-cluster-settings --cluster $CLUSTER_NAME --settings name=containerInsights,value=enabled
 ```
 
-## Lanch the OTEL task
+## Launch the OTEL task
 
 Let's take a look at the OTEL task we are creating to better understand what is going on. There is 4 containers in here
 
