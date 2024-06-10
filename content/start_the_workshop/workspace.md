@@ -41,7 +41,7 @@ and **lower work area**, and opening a new **terminal** tab in the main work are
 - If you like this theme, you can choose it yourself by selecting **View / Themes / Solarized / Solarized Dark**
 in the Cloud9 workspace menu.
 
-### Create the IAM Role and attach it to the Cloud9 instance
+### Create the IAM Role, attach it to the Cloud9 instance, and modify metadata options
 
 - Follow [this deep link to create an IAM role with Administrator access.](https://console.aws.amazon.com/iam/home#/roles$new?step=review&commonUseCase=EC2%2BEC2&selectedUseCase=EC2&policies=arn:aws:iam::aws:policy%2FAdministratorAccess)
 - Confirm that **AWS service** and **EC2** are selected, then click **Next** to view permissions.
@@ -55,7 +55,10 @@ in the Cloud9 workspace menu.
 ![c9instancerole](/images/c9instancerole.png)
 - Choose **ecsworkshop-admin** from the **IAM Role** drop down, and select **Save**
 ![c9attachrole](/images/c9attachrole.png)
-
+- Modify the metadata options by selecting **Actions / Instance settings / Modify instance metadata options**
+![c9instancemetadataoptions](/images/c9instancemetadataoptions.png)
+- Under IMDSv2 select optional and **save**
+![c9imsdv2optional](/images/c9imsdv2optional.png)
 - Return to your workspace terminal and perform the next steps
 
 Install jq, as we will use this quite a bit throughout the workshop when interacting with json outputs.
