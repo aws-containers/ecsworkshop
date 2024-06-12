@@ -7,14 +7,16 @@ weight: 50
 As you can see it’s fairly easy to get CloudWatch Container Insights to work, and set alarms for CPU and other metrics. With CloudWatch Container Insights we remove the need to manage and update your own monitoring infrastructure and allow you to use native AWS solutions that you don’t have to manage the platform for.
 
 #### Disable Container Insights
+
 To disable container insights for the ECS cluster execute following command.
 
-```
+```bash
 aws ecs update-cluster-settings --cluster ${clustername} --settings name=containerInsights,value=disabled --region ${AWS_REGION}
 ```
+
 Your output should look similar to this one below.
 
-```
+```json
 {
     "cluster": {
         "status": "ACTIVE", 
@@ -35,10 +37,10 @@ Your output should look similar to this one below.
     }
 }
 ```
-Go to [CloudFormation] (https://console.aws.amazon.com/cloudformation/home) and delete the stack that got created to enable Instance level insights.
+
+Go to [CloudFormation](https://console.aws.amazon.com/cloudformation/home) and delete the stack that got created to enable Instance level insights.
 
 ![Cluster Dashboard](/images/ContainerInsights29.png)
-
 
 Destroy the frontend service stack and the platform stack:
 
@@ -64,4 +66,3 @@ for service in services:
 {{% notice tip%}}
 There is a lot more to learn about our Observability features using Amazon CloudWatch and AWS X-Ray. Take a look at our [One Observability Workshop](https://observability.workshop.aws)
 {{% /notice%}}
-
