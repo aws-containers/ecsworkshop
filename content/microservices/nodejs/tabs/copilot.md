@@ -51,7 +51,7 @@ When the deployment is complete, navigate back to the frontend URL and you shoul
 Let's check out the ecsworkshop application details.
 
 ```bash
-copilot app show ecsworkshop
+copilot app show -n ecsworkshop
 ```
 
 The result should look like this:
