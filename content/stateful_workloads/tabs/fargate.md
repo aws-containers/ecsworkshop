@@ -4,6 +4,33 @@ disableToc: true
 hidden: true
 ---
  
+In the Cloud9 workspace, run the following commands:
+
+- Create service linked roles for ECS:
+
+```
+aws iam get-role --role-name "AWSServiceRoleForECS" || aws iam create-service-linked-role --aws-service-name "ecs.amazonaws.com"
+```
+
+#### Clone the platform repository
+
+Clone the service repos:
+
+```bash
+cd ~/environment
+git clone https://github.com/aws-containers/ecsdemo-platform
+```
+
+#### Build the platform
+
+First, we need to build the environment for our frontend service to run. For more information on what we're building, you can review the code here: [Platform](../../microservices/platform/build_environment).
+
+```bash
+cd ~/environment/ecsdemo-platform/cdk
+pip install -r requirements.txt
+cdk context --clear && cdk deploy --require-approval never
+```
+
 #### Navigate to the repo
 
 ```bash
