@@ -281,15 +281,17 @@ copilot pipeline init
 
 Once again, you will be prompted with a series of questions. Answer the questions with the following answers:
 
-- Which environment would you like to add to your pipeline? Answer: Choose "test"
 - Which repository would you like to use for your pipeline? Answer: Choose the repo url that matches the code commit repository. It will contain `git-codecommit.<region>`
+- What would you like to name this pipeline? Answer: Press `Enter` to use the default name (i.e., `ecsdemo-frontend-main`)
+- What type of continuous delivery pipeline is this? Answer: Choose "Workloads"
+- Which environment would you like to add to your pipeline? Answer: Choose "test"
 
 The core pipeline files will be created in the ./copilot directory. Here is what the output should show:
 
 ![init](/images/copilot-pipeline-init.png)
 
-Commit and push the new files to your repo. To get more information about the files that were created, check out the [copilot-cli documentation](https://github.com/aws/copilot-cli/wiki/Pipelines#setting-up-a-pipeline-step-by-step).
-In short, we are pushing the deployment manifest (for copilot to use as reference to deploy the service), pipeline.yml (which defines the stages in the pipeline), and the buildspec.yml (contains the build instructions for the service).
+Commit and push the new files to your repo. To get more information about the files that were created, check out the [copilot-cli documentation](https://aws.github.io/copilot-cli/docs/concepts/pipelines/).
+In short, we are pushing the deployment manifest (for copilot to use as reference to deploy the service), manifest.yml (which defines the stages in the pipeline), and the buildspec.yml (contains the build instructions for the service).
 
 ```bash
 git add copilot
