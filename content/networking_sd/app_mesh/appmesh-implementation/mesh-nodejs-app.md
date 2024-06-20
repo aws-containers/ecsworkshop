@@ -15,10 +15,10 @@ In this chapter, our goal is to edit your ECS NodeJs App in order to have the En
 
 To enable the nodejs app configuration, please uncomment the code between the tags `#appmesh-proxy-uncomment` in the file `~/environment/ecsdemo-nodejs/cdk/app.py` or run this command in the terminal:
 ```bash
-lines=($(grep -Fn '#appmesh-proxy-uncomment' ~/environment/ecsdemo-nodejs/cdk/app.py | cut -f1 -d:))
+lines=($(grep -Fn '#appmesh-proxy-uncomment' ~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py | cut -f1 -d:))
 unstart=$((${lines[0]} + 1))
 unend=$((${lines[1]} - 1))
-sed -i "${unstart},${unend} s/# //" ~/environment/ecsdemo-nodejs/cdk/app.py 
+sed -i "${unstart},${unend} s/# //" ~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py 
 ```
 
 so you can get this result in the file `ecsdemo-nodejs/cdk/app.py`
@@ -49,7 +49,7 @@ The **proxy configuration** will enable the app mesh integration with ECS. for m
 
 Uncomment the function `# self.appmesh()` in the file `~/environment/ecsdemo-nodejs/cdk/app.py` or execute the following command in the terminal:
 ```bash
-sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-nodejs/cdk/app.py
+sed -i -e '/self.appmesh()/s/# //' ~/environment/ecsdemo-nodejs/cdk/cdk/nodejsservice.py
 ```
 
 The `appmesh()` function will add all the required resources into the CF to configure the nodejs app to work with App Mesh. In a moment we will review the resources that were created by this function.
