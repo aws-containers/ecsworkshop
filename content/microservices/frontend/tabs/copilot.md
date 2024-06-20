@@ -59,6 +59,7 @@ Run the following command to get started:
 
 ```bash
 copilot env init --name test --profile default --default-config
+copilot env deploy --name test
 ```
 
 This part will take a few minutes because of all of the resources that are being created. This is not an action you run every time you deploy your service, it's just the one time to get your environment up and running.
