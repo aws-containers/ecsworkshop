@@ -26,5 +26,5 @@ Discover more AWS resources for building and running your application on AWS:
 
 #### Courses
 
-  - [Microservices with Docker, Flask, and React](https://testdriven.io/) - Learn how to build, test, and deploy microservices powered by Docker, Flask, React Amazon ECS!
+  - [Microservices with Docker, Flask, and React](https://testdriven.io/) - Learn how to build, test, and deploy microservices powered by Docker, Flask, React Amazon ECS!!
 
