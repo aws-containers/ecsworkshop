@@ -3,7 +3,7 @@ title: "Load testing metrics"
 chapter: false
 weight: 36
 ---
-Navigate to the Container Insights home page and select the time range to **15 min** as shown below
+Navigate to the Container Insights home page and select the time range to **15 min** as shown below.
 
 ![Cluster Dashboard](/images/ContainerInsights17.png)
 
@@ -11,4 +11,4 @@ You can see that the metrics are starting to show up on the graph widgets in the
 
 ![Cluster Dashboard](/images/ContainerInsights16.png)
 
-#### Next let's setup Alarms to get notified when CPU Utilization goes beyond a specific thershold
+#### Next, let's setup Alarms to get notified when CPU Utilization goes beyond a specific threshold.
