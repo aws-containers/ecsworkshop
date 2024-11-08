@@ -83,7 +83,8 @@ rm -vf ${HOME}/.aws/credentials
 We should configure our aws cli with our current region as default.
 
 ```sh
-echo "export AWS_DEFAULT_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+echo "export AWS_DEFAULT_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
 echo "export AWS_REGION=\$AWS_DEFAULT_REGION" >> ~/.bashrc
 echo "export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)" >> ~/.bashrc
 source ~/.bashrc
@@ -116,7 +117,7 @@ If the IAM role is not valid, <span style="color: red;">**DO NOT PROCEED**</span
 
 ```bash
 pip3 install --user --upgrade boto3
-export instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+export instance_id=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
 python3 -c "import boto3
 import os
 from botocore.exceptions import ClientError 
