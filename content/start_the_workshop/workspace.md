@@ -83,8 +83,9 @@ rm -vf ${HOME}/.aws/credentials
 We should configure our aws cli with our current region as default.
 
 ```sh
-echo "export AWS_DEFAULT_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
+echo "export AWS_DEFAULT_REGION=$(TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` && curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)" >> ~/.bashrc
 echo "export AWS_REGION=\$AWS_DEFAULT_REGION" >> ~/.bashrc
+source ~/.bashrc
 echo "export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)" >> ~/.bashrc
 source ~/.bashrc
 ```
